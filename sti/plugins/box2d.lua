@@ -16,7 +16,7 @@ return {
 
 	--- Initialize Box2D physics world.
 	-- @param world The Box2D world to add objects to.
-	box2d_init = function(map, world)
+	initBox2D = function(map, world)
 		assert(love.physics, "To use the Box2D plugin, please enable the love.physics module.")
 
 		local body      = love.physics.newBody(world, map.offsetx, map.offsety)
