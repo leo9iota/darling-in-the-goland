@@ -1,6 +1,8 @@
 -- Import STI library to import maps from Tiled
 local STI = require("sti")
 
+require("Player")
+
 function love.load()
     --[[
         The STI library relies on the open-source Box2D physics engine. With the "newWorld()"
@@ -16,6 +18,7 @@ end
 
 function love.update(dt)
     World:update(dt)
+    Player:update(dt)
 end
 
 function love.draw()
@@ -29,6 +32,7 @@ function love.draw()
     ]]
     love.graphics.push()
     love.graphics.scale(2, 2)
+    Player:draw()
     love.graphics.pop()
 
 end
