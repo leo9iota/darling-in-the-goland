@@ -14,6 +14,7 @@ function love.load()
     Map:initBox2D(World)
     Map.layers.Solid.visible = false
     background = love.graphics.newImage("assets/background.png")
+    Player:load()
 end
 
 function love.update(dt)
