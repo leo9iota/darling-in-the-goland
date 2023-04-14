@@ -7,7 +7,7 @@ function love.load()
     --[[
         The STI library relies on the open-source Box2D physics engine. With the "newWorld()"
         function call we get gravity. The "initBox2D()" function loads all layers and
-        objects that have the custom property "collidable" into the new world. 
+        objects that have the custom property "collidable" into the new world.
     ]]
     Map = STI("maps/map-1.lua", { "box2d" })
     World = love.physics.newWorld(0, 0)

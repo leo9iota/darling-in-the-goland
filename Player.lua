@@ -10,7 +10,8 @@ function Player:load()
     --[[
         The "maxSpeed" variable defines the player's maximum speed. The "acceleration" variable
         defines how fast the player is able to accelerate from a idling state. The "friction"
-        variable defines how fast the player will slow down after no movement input is given.
+        variable defines how fast the player will slow down after no movement input is given
+        by the user.
     ]]
     self.maxSpeed = 200
     self.acceleration = 2500
@@ -35,10 +36,10 @@ function Player:update(dt)
 end
 
 --[[
-    This function is responsible for the movement of the player. Note that for the player to
-    be moving in the left direction we have to subtract from the xVelocity. The "applyFriction()"
-    function is only being called if no input is given by the user, this means the player will
-    come to a standstill.
+    This function is responsible for the movement of the player. Note that for the player to be
+    able to move in the left direction we have to subtract friction from the xVelocity.
+    The "applyFriction()" function is only being called if no input is given by the user,
+    this means the player will come to a standstill.
 ]]
 function Player:movement(dt)
     if love.keyboard.isDown("d", "right") then
@@ -66,9 +67,9 @@ end
 
 --[[
     This function is responsible for bringing the player to a standstill. Without this function
-    the player would be constantly move. The if-statements checks that if the velocity on the
-    x-axis is greater than 0 that is subtracts specified, which is stored in the "friction"
-    variable from the xVelocity, so that the player is able to come to a standstill.
+    the player would be constantly moving. The if-statements check, that if the velocity on the
+    x-axis is greater than 0 that it subtracts the specified value, which is stored in the
+    "friction" variable, from the xVelocity so that the player comes to a standstill.
 ]]
 function Player:applyFriction(dt)
     if self.xVelocity > 0 then
