@@ -11,6 +11,15 @@ function love.load()
     ]]
     Map = STI("maps/map-1.lua", { "box2d" })
     World = love.physics.newWorld(0, 0)
+    
+    --[[
+        This function takes 4 functions as arguments but the last two are optional. The
+        "beginContact" callback function gets called when two fixtures collide and the
+        "endContact" callback functions gets called when two fixtures that were colling
+        no longer collide.
+    ]]
+    World:setCallbacks(beginContact, endContact)
+
     Map:initBox2D(World)
     Map.layers.Solid.visible = false
     background = love.graphics.newImage("assets/background.png")
@@ -35,5 +44,20 @@ function love.draw()
     love.graphics.scale(2, 2)
     Player:draw()
     love.graphics.pop()
+end
 
+--[[
+    This function is responsible for listening for input that activates jumping, which is a
+    callback function that only needs to know when a specific key is pressed.
+]]
+function love.keypressed(key)
+    Player:jump(key)
+end
+
+function beginContact(fixtureA, fixtureB, collisionData)
+    Player:beginContact(fixtureA, fixtureB, collisionData)
+end
+
+function endContact(fixtureA, fixtureB, collisionData)
+   Player:endContact(fixtureA, fixtureB, collisionData) 
 end

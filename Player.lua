@@ -17,6 +17,8 @@ function Player:load()
     self.acceleration = 2500
     self.friction = 3500
     self.gravity = 1500
+    self.jumpForce = -500
+    self.isGrounded = false
 
     --[[
         Create physics table where all of the player's physic properties are stored. The
@@ -31,8 +33,18 @@ function Player:load()
 end
 
 function Player:update(dt)
-    Player:syncPhysics()
-    Player:movement(dt)
+    self:syncPhysics()
+    self:movement(dt)
+    self:applyGravity(dt)
+end
+
+--[[
+    This function is responsible for applying gravity to the world.
+]]
+function Player:applyGravity(dt)
+    if not self.isGrounded then
+        self.yVelocity = self.yVelocity + self.gravity * dt
+    end
 end
 
 --[[
@@ -96,6 +108,53 @@ function Player:syncPhysics()
     -- self.y = self.physics.body:getY()
     self.x, self.y = self.physics.body:getPosition()
     self.physics.body:setLinearVelocity(self.xVelocity, self.yVelocity)
+end
+
+--[[
+    These function are responsible for the player-side of collision
+]]
+function Player:beginContact(fixtureA, fixtureB, collisionData)
+    -- If the player is already touching ground then skip the whole function
+    if self.isGrounded == true then
+        return
+    end
+
+    local nx, ny = collisionData:getNormal()
+    
+    if fixtureA == self.physics.fixture then
+        if ny > 0 then
+            self:land(collisionData)
+        end
+    elseif fixtureB == self.physics.fixture then
+        if ny < 0 then
+            self:land(collisionData)
+        end
+    end
+end
+
+function Player:land(collisionData)
+    self.currentGroundCollision = collisionData
+    self.yVelocity = 0
+    self.isGrounded = true
+end
+
+--[[
+    This function is responsible for making the player jump, which is also defined in the
+    callback function in main.lua (love.keypressed)
+]]
+function Player:jump(key)
+    if (key == "w" or key == "up")  and self.isGrounded then
+        self.yVelocity = self.jumpForce
+        self.isGrounded = false
+    end
+end
+
+function Player:endContact(fixtureA, fixtureB, collisionData)
+    if fixtureA == self.physics.fixture or fixtureB == self.physics.fixture then
+        if self.currentGroundCollision == collisionData then
+            self.isGrounded = false
+        end
+    end
 end
 
 --[[
