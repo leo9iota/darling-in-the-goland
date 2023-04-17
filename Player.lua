@@ -24,10 +24,11 @@ function Player:load()
     --[[
         These variables are responsible for making the player jump if he was grounded recently.
         If the player is unable to jump the next frame he isn't grounded, doesn't feel that
-        smooth. The "graceDuration" is the time the player is able to jump after not being
+        smooth. The "jumpTimeFrame" is the time the player is able to jump after not being
         grounded.
     ]]
-  
+    self.jumpTimeFrame = 0
+    self.timeFrameDuration = 0.1
 
     --[[
         Create physics table where all of the player's physic properties are stored. The
@@ -42,9 +43,19 @@ function Player:load()
 end
 
 function Player:update(dt)
+    self:decreaseTimeFrame(dt)
     self:syncPhysics()
     self:movement(dt)
     self:applyGravity(dt)
+end
+
+--[[
+
+]]
+function Player:decreaseTimeFrame(dt)
+    if not self.isGrounded then
+        self.jumpTimeFrame = self.jumpTimeFrame - dt
+    end
 end
 
 --[[
@@ -146,17 +157,20 @@ function Player:land(collision)
     self.yVelocity = 0
     self.isGrounded = true
     self.canDoubleJump = true
+    self.jumpTimeFrame = self.timeFrameDuration
 end
 
 --[[
     This function is responsible for making the player jump, which is also defined in the
-    callback function in main.lua (love.keypressed)
+    callback function in main.lua (love.keypressed). "jumpTimeFrame" will allow the player to
+    jump even if the entity isn't grounded.
 ]]
 function Player:jump(key)
     if key == "w" or key == "up" then
-        if self.isGrounded then
+        if self.isGrounded or self.jumpTimeFrame > 0 then
             self.yVelocity = self.jumpForce
             self.isGrounded = false
+            self.jumpTimeFrame = 0
         elseif self.canDoubleJump then
             self.canDoubleJump = false
             self.yVelocity = self.jumpForce * 0.75
