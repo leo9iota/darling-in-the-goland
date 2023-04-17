@@ -14,11 +14,20 @@ function Player:load()
         by the user.
     ]]
     self.maxSpeed = 200
-    self.acceleration = 2500
+    self.acceleration = 2000
     self.friction = 3500
     self.gravity = 1500
-    self.jumpForce = -500
     self.isGrounded = false
+    self.jumpForce = -500
+    self.canDoubleJump = true
+
+    --[[
+        These variables are responsible for making the player jump if he was grounded recently.
+        If the player is unable to jump the next frame he isn't grounded, doesn't feel that
+        smooth. The "graceDuration" is the time the player is able to jump after not being
+        grounded.
+    ]]
+  
 
     --[[
         Create physics table where all of the player's physic properties are stored. The
@@ -58,7 +67,7 @@ function Player:movement(dt)
         if self.xVelocity < self.maxSpeed then
             if self.xVelocity + self.acceleration * dt < self.maxSpeed then
                 self.xVelocity = self.xVelocity + self.acceleration * dt
-                print(self.xVelocity)
+                print("xVelocity:", math.floor(self.xVelocity))
             else
                 self.xVelocity = self.maxSpeed
             end
@@ -67,7 +76,7 @@ function Player:movement(dt)
         if self.xVelocity > -self.maxSpeed then
             if self.xVelocity - self.acceleration * dt > -self.maxSpeed then
                 self.xVelocity = self.xVelocity - self.acceleration * dt
-                print(self.xVelocity)
+                print("xVelocity:", math.floor(self.xVelocity))
             else
                 self.xVelocity = -self.maxSpeed
             end
@@ -113,29 +122,30 @@ end
 --[[
     These function are responsible for the player-side of collision
 ]]
-function Player:beginContact(fixtureA, fixtureB, collisionData)
+function Player:beginContact(fixtureA, fixtureB, collision)
     -- If the player is already touching ground then skip the whole function
     if self.isGrounded == true then
         return
     end
 
-    local nx, ny = collisionData:getNormal()
-    
+    local nx, ny = collision:getNormal()
+
     if fixtureA == self.physics.fixture then
         if ny > 0 then
-            self:land(collisionData)
+            self:land(collision)
         end
     elseif fixtureB == self.physics.fixture then
         if ny < 0 then
-            self:land(collisionData)
+            self:land(collision)
         end
     end
 end
 
-function Player:land(collisionData)
-    self.currentGroundCollision = collisionData
+function Player:land(collision)
+    self.currentGroundCollision = collision
     self.yVelocity = 0
     self.isGrounded = true
+    self.canDoubleJump = true
 end
 
 --[[
@@ -143,15 +153,20 @@ end
     callback function in main.lua (love.keypressed)
 ]]
 function Player:jump(key)
-    if (key == "w" or key == "up")  and self.isGrounded then
-        self.yVelocity = self.jumpForce
-        self.isGrounded = false
+    if key == "w" or key == "up" then
+        if self.isGrounded then
+            self.yVelocity = self.jumpForce
+            self.isGrounded = false
+        elseif self.canDoubleJump then
+            self.canDoubleJump = false
+            self.yVelocity = self.jumpForce * 0.75
+        end
     end
 end
 
-function Player:endContact(fixtureA, fixtureB, collisionData)
+function Player:endContact(fixtureA, fixtureB, collision)
     if fixtureA == self.physics.fixture or fixtureB == self.physics.fixture then
-        if self.currentGroundCollision == collisionData then
+        if self.currentGroundCollision == collision then
             self.isGrounded = false
         end
     end

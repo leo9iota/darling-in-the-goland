@@ -54,10 +54,10 @@ function love.keypressed(key)
     Player:jump(key)
 end
 
-function beginContact(fixtureA, fixtureB, collisionData)
-    Player:beginContact(fixtureA, fixtureB, collisionData)
+function beginContact(fixtureA, fixtureB, collision)
+    Player:beginContact(fixtureA, fixtureB, collision)
 end
 
-function endContact(fixtureA, fixtureB, collisionData)
-   Player:endContact(fixtureA, fixtureB, collisionData) 
+function endContact(fixtureA, fixtureB, collision)
+   Player:endContact(fixtureA, fixtureB, collision) 
 end
