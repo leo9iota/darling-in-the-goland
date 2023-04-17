@@ -3,6 +3,8 @@ local STI = require("sti")
 
 require("Player")
 
+love.graphics.setDefaultFilter("nearest", "nearest")
+
 function love.load()
     --[[
         The STI library relies on the open-source Box2D physics engine. With the "newWorld()"

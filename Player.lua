@@ -30,6 +30,8 @@ function Player:load()
     self.jumpTimeFrame = 0
     self.timeFrameDuration = 0.1
 
+    self:loadAssets()
+
     --[[
         Create physics table where all of the player's physic properties are stored. The
         "newBody()" function from LÖVE 2D creates a new physics body. We set the body to be
@@ -42,6 +44,37 @@ function Player:load()
     self.physics.fixture = love.physics.newFixture(self.physics.body, self.physics.shape)
 end
 
+--[[
+    The player has 3 states: idle, run and air. This function is responsible for animating these
+    3 states.
+]]
+function Player:loadAssets()
+    self.animation = { timer = 0, rate = 0.1 }
+
+    self.animation.run = { totalFrames = 6, currentFrame = 1, images = {} }
+    for i = 1, self.animation.run.totalFrames do
+        self.animation.run.images[i] = love.graphics.newImage("assets/player/run-animation/" .. i .. ".png")
+    end
+
+    self.animation.idle = { totalFrames = 4, currentFrame = 1, images = {} }
+    for i = 1, self.animation.idle.totalFrames do
+        self.animation.idle.images[i] = love.graphics.newImage("assets/player/idle-animation/" .. i .. ".png")
+    end
+
+    self.animation.air = { totalFrames = 4, currentFrame = 1, images = {} }
+    for i = 1, self.animation.air.totalFrames do
+        self.animation.air.images[i] = love.graphics.newImage("assets/player/air-animation/" .. i .. ".png")
+    end
+
+    --[[
+        This variable will store the current animation that we want to draw. We also get the
+        width and height of our player assets.
+    ]]
+    self.animation.draw = self.animation.idle.images[1]
+    self.animation.width = self.animation.draw:getWidth()
+    self.animation.height = self.animation.draw:getHeight()
+end
+
 function Player:update(dt)
     self:decreaseTimeFrame(dt)
     self:syncPhysics()
@@ -50,7 +83,9 @@ function Player:update(dt)
 end
 
 --[[
-
+    This function is responsible for decreasing the time frame the player has to activate a
+    jump after not being grounded (touching ground) for a specific amount of time, which is
+    stored in the "timeFrameDuration" variable.
 ]]
 function Player:decreaseTimeFrame(dt)
     if not self.isGrounded then
@@ -192,5 +227,6 @@ end
     middle, while the origin point in LÖVE 2D is at the top left corner.
 ]]
 function Player:draw()
-    love.graphics.rectangle("fill", self.x - self.width / 2, self.y - self.height / 2, self.width, self.height)
+    -- love.graphics.rectangle("fill", self.x - self.width / 2, self.y - self.height / 2, self.width, self.height)
+    love.graphics.draw(self.animation.draw, self.x, self.y, 0, 1, 1, self.animation.width / 2, self.animation.height / 2)
 end
