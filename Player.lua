@@ -20,6 +20,8 @@ function Player:load()
     self.isGrounded = false
     self.jumpForce = -500
     self.canDoubleJump = true
+    self.playerDirection = "right"
+    self.animState = "idle"
 
     --[[
         These variables are responsible for making the player jump if he was grounded recently.
@@ -53,7 +55,7 @@ function Player:loadAssets()
 
     self.animation.run = { totalFrames = 6, currentFrame = 1, images = {} }
     for i = 1, self.animation.run.totalFrames do
-        self.animation.run.images[i] = love.graphics.newImage("assets/player/run-animation/" .. i .. ".png")
+        self.animation.run.images[i] = love.graphics.newImage("assets/player/run-animation/zero-two-run-" .. i .. ".png")
     end
 
     self.animation.idle = { totalFrames = 1, currentFrame = 1, images = {} }
@@ -76,34 +78,52 @@ function Player:loadAssets()
 end
 
 function Player:update(dt)
-    -- self:animate(dt)
+    self:setPlayerDirection()
+    self:animate(dt)
     self:decreaseTimeFrame(dt)
     self:syncPhysics()
     self:movement(dt)
     self:applyGravity(dt)
 end
 
--- function Player:animate(dt)
---     self.animation.timer = self.animation.timer + dt
---     if self.animation.timer > self.animation.rate then
---         self.animation.timer = 0
---         self:setNewFrame()
---     end
--- end
+function Player:setAnimState()
+    
+end
 
--- --[[
---     This function is responsible for updating the different player images, to create
---     animation
--- ]]
--- function Player:setNewFrame()
---     local anim = self.animation.run
---     if anim.currentFrame < anim.totalFrames then
---         anim.currentFrame = anim.currentFrame + 1
---     else
---         anim.currentFrame = 1
---     end
---     self.animation.draw = anim.images[anim.currentFrame]
--- end
+--[[
+    This function is responsible for setting the player sprite in the correct direction. When
+    "D" is pressed the player sprite faces right and when "A" is pressed the player sprite
+    faces left.
+]]
+function Player:setPlayerDirection()
+    if self.xVelocity < 0 then
+        self.playerDirection = "left"
+    elseif self.xVelocity > 0 then
+        self.playerDirection = "right"
+    end
+end
+
+function Player:animate(dt)
+    self.animation.timer = self.animation.timer + dt
+    if self.animation.timer > self.animation.rate then
+        self.animation.timer = 0
+        self:setNewFrame()
+    end
+end
+
+--[[
+    This function is responsible for updating the different player images, to create
+    animation
+]]
+function Player:setNewFrame()
+    local anim = self.animation.run
+    if anim.currentFrame < anim.totalFrames then
+        anim.currentFrame = anim.currentFrame + 1
+    else
+        anim.currentFrame = 1
+    end
+    self.animation.draw = anim.images[anim.currentFrame]
+end
 
 --[[
     This function is responsible for decreasing the time frame the player has to activate a
@@ -250,6 +270,10 @@ end
     middle, while the origin point in LÖVE 2D is at the top left corner.
 ]]
 function Player:draw()
+    local scaleX = 1
+    if self.playerDirection == "left" then
+        scaleX = -1
+    end
     -- love.graphics.rectangle("fill", self.x - self.width / 2, self.y - self.height / 2, self.width, self.height)
-    love.graphics.draw(self.animation.draw, self.x, self.y, 0, 1, 1, self.animation.width / 2, self.animation.height / 2)
+    love.graphics.draw(self.animation.draw, self.x, self.y, 0, scaleX, 1, self.animation.width / 2, self.animation.height / 2)
 end
