@@ -76,11 +76,34 @@ function Player:loadAssets()
 end
 
 function Player:update(dt)
+    -- self:animate(dt)
     self:decreaseTimeFrame(dt)
     self:syncPhysics()
     self:movement(dt)
     self:applyGravity(dt)
 end
+
+-- function Player:animate(dt)
+--     self.animation.timer = self.animation.timer + dt
+--     if self.animation.timer > self.animation.rate then
+--         self.animation.timer = 0
+--         self:setNewFrame()
+--     end
+-- end
+
+-- --[[
+--     This function is responsible for updating the different player images, to create
+--     animation
+-- ]]
+-- function Player:setNewFrame()
+--     local anim = self.animation.run
+--     if anim.currentFrame < anim.totalFrames then
+--         anim.currentFrame = anim.currentFrame + 1
+--     else
+--         anim.currentFrame = 1
+--     end
+--     self.animation.draw = anim.images[anim.currentFrame]
+-- end
 
 --[[
     This function is responsible for decreasing the time frame the player has to activate a
