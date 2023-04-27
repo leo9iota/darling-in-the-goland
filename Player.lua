@@ -55,12 +55,12 @@ function Player:loadAssets()
 
     self.animation.run = { totalFrames = 6, currentFrame = 1, images = {} }
     for i = 1, self.animation.run.totalFrames do
-        self.animation.run.images[i] = love.graphics.newImage("assets/player/run-animation/zero-two-run-" .. i .. ".png")
+        self.animation.run.images[i] = love.graphics.newImage("assets/player/run-animation/" .. i .. ".png")
     end
 
     self.animation.idle = { totalFrames = 1, currentFrame = 1, images = {} }
     for i = 1, self.animation.idle.totalFrames do
-        self.animation.idle.images[i] = love.graphics.newImage("assets/player/idle-animation/zero-two-idle-" .. i .. ".png")
+        self.animation.idle.images[i] = love.graphics.newImage("assets/player/idle-animation/" .. i .. ".png")
     end
 
     self.animation.air = { totalFrames = 4, currentFrame = 1, images = {} }
