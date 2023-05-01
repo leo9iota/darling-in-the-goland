@@ -14,7 +14,7 @@ function Player:load()
         by the user.
     ]]
     self.maxSpeed = 200
-    self.acceleration = 2000
+    self.acceleration = 1500
     self.friction = 3500
     self.gravity = 1500
     self.isGrounded = false
@@ -58,7 +58,7 @@ function Player:loadAssets()
         self.animation.run.images[i] = love.graphics.newImage("assets/player/run-animation/" .. i .. ".png")
     end
 
-    self.animation.idle = { totalFrames = 1, currentFrame = 1, images = {} }
+    self.animation.idle = { totalFrames = 4, currentFrame = 1, images = {} }
     for i = 1, self.animation.idle.totalFrames do
         self.animation.idle.images[i] = love.graphics.newImage("assets/player/idle-animation/" .. i .. ".png")
     end
@@ -78,6 +78,7 @@ function Player:loadAssets()
 end
 
 function Player:update(dt)
+    self:setAnimState()
     self:setPlayerDirection()
     self:animate(dt)
     self:decreaseTimeFrame(dt)
@@ -86,8 +87,20 @@ function Player:update(dt)
     self:applyGravity(dt)
 end
 
+--[[
+    This function is responsible for determining the animation state of the player. The
+    player can either be in air, idle or running.
+]]
 function Player:setAnimState()
-    
+    if not self.isGrounded then
+        self.animState = "air"
+    elseif self.xVelocity == 0 then
+        self.animState = "idle"
+    else
+        self.animState = "run"
+    end
+
+    -- print(self.animState)
 end
 
 --[[
@@ -103,8 +116,12 @@ function Player:setPlayerDirection()
     end
 end
 
+--[[
+    This function is responsible for animating the player images
+]]
 function Player:animate(dt)
     self.animation.timer = self.animation.timer + dt
+
     if self.animation.timer > self.animation.rate then
         self.animation.timer = 0
         self:setNewFrame()
@@ -116,12 +133,14 @@ end
     animation
 ]]
 function Player:setNewFrame()
-    local anim = self.animation.run
+    local anim = self.animation[self.animState]
+
     if anim.currentFrame < anim.totalFrames then
         anim.currentFrame = anim.currentFrame + 1
     else
         anim.currentFrame = 1
     end
+
     self.animation.draw = anim.images[anim.currentFrame]
 end
 
@@ -153,23 +172,27 @@ end
 ]]
 function Player:movement(dt)
     if love.keyboard.isDown("d", "right") then
-        if self.xVelocity < self.maxSpeed then
-            if self.xVelocity + self.acceleration * dt < self.maxSpeed then
-                self.xVelocity = self.xVelocity + self.acceleration * dt
-                print("xVelocity:", math.floor(self.xVelocity))
-            else
-                self.xVelocity = self.maxSpeed
-            end
-        end
+        self.xVelocity = math.min(self.xVelocity + self.acceleration * dt, self.maxSpeed)
+        print("xVelocity:", math.floor(self.xVelocity))
+        -- if self.xVelocity < self.maxSpeed then
+        --     if self.xVelocity + self.acceleration * dt < self.maxSpeed then
+        --         self.xVelocity = self.xVelocity + self.acceleration * dt
+        --         print("xVelocity:", math.floor(self.xVelocity))
+        --     else
+        --         self.xVelocity = self.maxSpeed
+        --     end
+        -- end
     elseif love.keyboard.isDown("a", "left") then
-        if self.xVelocity > -self.maxSpeed then
-            if self.xVelocity - self.acceleration * dt > -self.maxSpeed then
-                self.xVelocity = self.xVelocity - self.acceleration * dt
-                print("xVelocity:", math.floor(self.xVelocity))
-            else
-                self.xVelocity = -self.maxSpeed
-            end
-        end
+        self.xVelocity = math.max(self.xVelocity - self.acceleration * dt, -self.maxSpeed)
+        print("xVelocity:", math.floor(self.xVelocity))
+        -- if self.xVelocity > -self.maxSpeed then
+        --     if self.xVelocity - self.acceleration * dt > -self.maxSpeed then
+        --         self.xVelocity = self.xVelocity - self.acceleration * dt
+        --         print("xVelocity:", math.floor(self.xVelocity))
+        --     else
+        --         self.xVelocity = -self.maxSpeed
+        --     end
+        -- end
     else
         Player:applyFriction(dt)
     end
@@ -182,18 +205,26 @@ end
     "friction" variable, from the xVelocity so that the player comes to a standstill.
 ]]
 function Player:applyFriction(dt)
+    -- If the player is moving in the right direction
     if self.xVelocity > 0 then
-        if self.xVelocity - self.friction * dt > 0 then
-            self.xVelocity = self.xVelocity - self.friction * dt
-        else
-            self.xVelocity = 0
-        end
+        self.xVelocity = math.max(self.xVelocity - self.friction * dt, 0)
+        -- and the xVel is still higher even after adding friction
+        -- if self.xVelocity - self.friction * dt > 0 then
+        --     -- then apply the specified friction amount
+        --     self.xVelocity = self.xVelocity - self.friction * dt
+        -- else
+        --     -- else set xVel to 0
+        --     self.xVelocity = 0
+        -- end
+    -- If the player is moving the in the left direction
     elseif self.xVelocity < 0 then
-        if self.xVelocity + self.friction * dt < 0 then
-            self.xVelocity = self.xVelocity + self.friction * dt
-        else
-            self.xVelocity = 0
-        end
+        self.xVelocity = math.min(self.xVelocity + self.friction * dt, 0)
+        -- Do the same thing as in the first if-statement
+        -- if self.xVelocity + self.friction * dt < 0 then
+        --     self.xVelocity = self.xVelocity + self.friction * dt
+        -- else
+        --     self.xVelocity = 0
+        -- end
     end
 end
 
@@ -222,10 +253,16 @@ function Player:beginContact(fixtureA, fixtureB, collision)
     if fixtureA == self.physics.fixture then
         if ny > 0 then
             self:land(collision)
+        -- Check if ny < 0, then prevent player from getting stuck under collidable object
+        elseif ny < 0 then
+            self.yVelocity = 0
         end
     elseif fixtureB == self.physics.fixture then
         if ny < 0 then
             self:land(collision)
+        elseif ny > 0 then
+        -- Check if ny < 0, then prevent player from getting stuck under collidable object
+            self.yVelocity = 0
         end
     end
 end
