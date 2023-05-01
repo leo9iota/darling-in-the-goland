@@ -2,6 +2,7 @@
 local STI = require("sti")
 
 require("Player")
+require("Coin")
 
 love.graphics.setDefaultFilter("nearest", "nearest")
 
@@ -54,6 +55,10 @@ end
 ]]
 function love.keypressed(key)
     Player:jump(key)
+
+    if key == "escape" then
+        love.event.quit()
+    end
 end
 
 function beginContact(fixtureA, fixtureB, collision)
