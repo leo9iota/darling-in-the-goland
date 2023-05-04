@@ -27,11 +27,15 @@ function love.load()
     Map.layers.Solid.visible = false
     background = love.graphics.newImage("assets/background.png")
     Player:load()
+    Coin.new(160, 180)
+    Coin.new(320, 150)
+    Coin.new(370, 150)
 end
 
 function love.update(dt)
     World:update(dt)
     Player:update(dt)
+    Coin:updateAllCoins(dt)
 end
 
 function love.draw()
@@ -46,6 +50,7 @@ function love.draw()
     love.graphics.push()
     love.graphics.scale(2, 2)
     Player:draw()
+    Coin:drawAllCoins()
     love.graphics.pop()
 end
 

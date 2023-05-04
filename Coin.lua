@@ -1,5 +1,6 @@
 Coin = {}
 Coin.__index = Coin
+ActiveCoins = {}
 
 --[[
     This function acts like a constructor (similar to Java). We have to do it this way
@@ -13,7 +14,30 @@ function Coin.new(x, y)
     instance.image = love.graphics.newImage("assets/coin.png")
     instance.width = instance.image:getWidth()
     instance.height = instance.image:getHeight()
-    return instance
+    table.insert(ActiveCoins, instance) -- Insert all instances into `ActiveCoins` table
+end
+
+function Coin:update(dt)
+    
+end
+
+--[[
+    This function is responsible for making the coin appear to be spinning with the help
+    of scaling.
+]]
+function Coin:spinAnim()
+    
+end
+
+--[[
+    This function is responsible for updating all the coins on the map. We loop through
+    the table and update each instance (coin) with the `update(dt)` function provided
+    by LÖVE 2D.
+]]
+function Coin.updateAllCoins(dt)
+    for index, instance in ipairs(ActiveCoins) do
+        instance:update(dt)
+    end
 end
 
 --[[
@@ -24,4 +48,14 @@ end
 ]]
 function Coin:draw()
     love.graphics.draw(self.image, self.x, self.y, 0, 1, 1, self.width / 2, self.height / 2)
+end
+
+--[[
+    This function is responsible for drawing all coins to the screen which are stored inside
+    the `ActiveCoins` table.
+]]
+function Coin.drawAllCoins()
+    for index, instance in ipairs(ActiveCoins) do
+        instance:draw()
+    end
 end
