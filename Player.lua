@@ -30,7 +30,7 @@ function Player:load()
         grounded.
     ]]
     self.jumpTimeFrame = 0
-    self.timeFrameDuration = 0.1
+    self.timeFrameDuration = 0.25
 
     self:loadAssets()
 
