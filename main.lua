@@ -4,7 +4,8 @@ local STI = require("sti")
 require("Player")
 require("Coin")
 
-love.graphics.setDefaultFilter("nearest", "nearest")
+love.graphics.setDefaultFilter("nearest", "nearest") -- Set filter to have pixel esthetic
+-- math.randomseed(os.time()) -- Generate truly random numbers
 
 function love.load()
     --[[
@@ -66,7 +67,18 @@ function love.keypressed(key)
     end
 end
 
+--[[
+    If the player collects a coin we skip the collision detection for the ground etc.
+    
+    --- IMPORTANT ---
+
+    You're not allowed to make any changes to the physics World inside of any of these
+    callbacks. This is due to the fact that Box2D "locks" the world.
+
+    The workaround is to mark the object outside of the callback and then remove it.
+]]
 function beginContact(fixtureA, fixtureB, collision)
+    if Coin.beginContact(fixtureA, fixtureB, collision) then return end
     Player:beginContact(fixtureA, fixtureB, collision)
 end
 
