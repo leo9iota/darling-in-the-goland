@@ -3,6 +3,7 @@ local STI = require("sti")
 
 require("Player")
 require("Coin")
+require("GUI")
 
 love.graphics.setDefaultFilter("nearest", "nearest") -- Set filter to have pixel esthetic
 -- math.randomseed(os.time()) -- Generate truly random numbers
@@ -27,16 +28,22 @@ function love.load()
     Map:initBox2D(World)
     Map.layers.Solid.visible = false
     background = love.graphics.newImage("assets/background.png")
+    GUI:load()
     Player:load()
     Coin.new(160, 180)
     Coin.new(320, 150)
     Coin.new(370, 150)
 end
 
+--[[
+    Each of the functions have to be called inside of `main.lua`. This is because `main.lua`
+    is the entry point of every LÖVE 2D game. 
+]]
 function love.update(dt)
     World:update(dt)
     Player:update(dt)
     Coin:updateAllCoins(dt)
+    GUI:update(dt)
 end
 
 function love.draw()
@@ -53,6 +60,17 @@ function love.draw()
     Player:draw()
     Coin:drawAllCoins()
     love.graphics.pop()
+
+    --[[
+        The GUI function is called outside of the scaling functions:
+        - push()
+        - scale()
+        - pop()
+        
+        because the GUI should be static.
+    ]]
+    GUI:draw()
+    -- love.graphics.printf("Hello World", 200, 300, 420, "justify")
 end
 
 --[[
@@ -71,7 +89,6 @@ end
     If the player collects a coin we skip the collision detection for the ground etc.
     
     --- IMPORTANT ---
-
     You're not allowed to make any changes to the physics World inside of any of these
     callbacks. This is due to the fact that Box2D "locks" the world.
 

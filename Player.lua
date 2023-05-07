@@ -7,6 +7,7 @@ function Player:load()
     self.height = 60
     self.xVelocity = 0
     self.yVelocity = 100
+
     --[[
         The "maxSpeed" variable defines the player's maximum speed. The "acceleration" variable
         defines how fast the player is able to accelerate from a idling state. The "friction"
@@ -22,6 +23,7 @@ function Player:load()
     self.canDoubleJump = true
     self.playerDirection = "right"
     self.animState = "idle"
+    self.coinCount = 0
 
     --[[
         These variables are responsible for making the player jump if he was grounded recently.
@@ -75,6 +77,10 @@ function Player:loadAssets()
     self.animation.draw = self.animation.idle.images[1]
     self.animation.width = self.animation.draw:getWidth()
     self.animation.height = self.animation.draw:getHeight()
+end
+
+function Player:incrementCoinCount()
+    self.coinCount = self.coinCount + 1
 end
 
 function Player:update(dt)
@@ -173,7 +179,7 @@ end
 function Player:movement(dt)
     if love.keyboard.isDown("d", "right") then
         self.xVelocity = math.min(self.xVelocity + self.acceleration * dt, self.maxSpeed)
-        print("xVelocity:", math.floor(self.xVelocity))
+        -- print("xVelocity:", math.floor(self.xVelocity))
         -- if self.xVelocity < self.maxSpeed then
         --     if self.xVelocity + self.acceleration * dt < self.maxSpeed then
         --         self.xVelocity = self.xVelocity + self.acceleration * dt
@@ -184,7 +190,7 @@ function Player:movement(dt)
         -- end
     elseif love.keyboard.isDown("a", "left") then
         self.xVelocity = math.max(self.xVelocity - self.acceleration * dt, -self.maxSpeed)
-        print("xVelocity:", math.floor(self.xVelocity))
+        -- print("xVelocity:", math.floor(self.xVelocity))
         -- if self.xVelocity > -self.maxSpeed then
         --     if self.xVelocity - self.acceleration * dt > -self.maxSpeed then
         --         self.xVelocity = self.xVelocity - self.acceleration * dt

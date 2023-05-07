@@ -36,6 +36,8 @@ function Coin:removeCoin()
     for index, instance in ipairs(ActiveCoins) do
         -- Check if the current instance equals to itself
         if instance == self then
+            Player:incrementCoinCount()
+            print("Coin Count: ", Player.coinCount)
             self.physics.body:destroy()
             -- If thats the case remove from table
             table.remove(ActiveCoins, index)
@@ -55,9 +57,9 @@ function Coin:checkCoinRemoval()
     if self.isCoinRemovable then
         --[[
             --- FIX ---
-
             Use colon operator instead of dot operator. The colon operator implicitly
-            passses it's own table as first argument.
+            passses it's own table as first argument. We need pass the table as an
+            argument, to access all it's methods and variables.
         ]]
         self:removeCoin()
     end
