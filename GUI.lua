@@ -23,9 +23,6 @@ end
     This function is responsible for drawing the coin image and coin count to the screen.
 ]]
 function GUI:displayCoinCounter()
-    --[[
-        This creates a shadow around the coin image
-    ]]
     love.graphics.setColor(0, 0, 0, 0.5)
     -- Draw coin image
     love.graphics.draw(self.coinCounter.image, self.coinCounter.x + 3, self.coinCounter.y + 3, 0, self.coinCounter.scale, self.coinCounter.scale)
@@ -35,16 +32,15 @@ function GUI:displayCoinCounter()
     -- Set new font
     love.graphics.setFont(self.publicPixelFont)
 
-    -- Coin counter alignment
-    local x = self.coinCounter.x + self.coinCounter.width * self.coinCounter.scale
+    -- Coin counter position in the GUI
+    local x = self.coinCounter.x + self.coinCounter.width * self.coinCounter.scale + 10
     local y = self.coinCounter.y + self.coinCounter.height / 2 * self.coinCounter.scale - self.publicPixelFont:getHeight() / 2
 
-    --[[
-        This creates a shadow around the coin value
-    ]]
+    -- Create a shadow around the coin
     love.graphics.setColor(0, 0, 0, 0.5)
-    -- Print coin count
-    love.graphics.print(":" .. Player.coinCount, x + 3, y + 3)
+    
+    -- Offset shadow
+    love.graphics.print(Player.coinCount, x + 3, y + 3)
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.print(":" .. Player.coinCount, x, y)
+    love.graphics.print(Player.coinCount, x, y)
 end
