@@ -36,7 +36,7 @@ function Coin:removeCoin()
     for index, instance in ipairs(ActiveCoins) do
         -- Check if the current instance equals to itself
         if instance == self then
-            Player:incrementCoinCount()
+            Player:collectCoin()
             print("Coin Count: ", Player.coinCount)
             self.physics.body:destroy()
             -- If thats the case remove from table
