@@ -3,11 +3,22 @@ Player = {}
 function Player:load()
     self.x = 100
     self.y = 0
+    self.startX = self.x -- Start position x after player died
+    self.startY = self.y -- Start position y after player died
     self.width = 20
     self.height = 60
     self.xVelocity = 0
     self.yVelocity = 100
 
+    -- Player states
+    self.isAlive = true
+    self.isGrounded = false
+    self.canDoubleJump = true
+    self.animState = "idle"
+
+    -- Player movement
+    self.jumpForce = -500
+    self.playerDirection = "right"
     --[[
         The "maxSpeed" variable defines the player's maximum speed. The "acceleration" variable
         defines how fast the player is able to accelerate from a idling state. The "friction"
@@ -18,12 +29,12 @@ function Player:load()
     self.acceleration = 1500
     self.friction = 3500
     self.gravity = 1500
-    self.isGrounded = false
-    self.jumpForce = -500
-    self.canDoubleJump = true
-    self.playerDirection = "right"
-    self.animState = "idle"
+
     self.coinCount = 0
+    self.health = {
+        current = 3,
+        max = 3
+    }
 
     --[[
         These variables are responsible for making the player jump if he was grounded recently.
@@ -46,6 +57,9 @@ function Player:load()
     self.physics.body:setFixedRotation(true)
     self.physics.shape = love.physics.newRectangleShape(self.width, self.height)
     self.physics.fixture = love.physics.newFixture(self.physics.body, self.physics.shape)
+
+    -- self:takeDamage(1)
+    -- self:takeDamage(1)
 end
 
 --[[
@@ -53,19 +67,34 @@ end
     3 states.
 ]]
 function Player:loadAssets()
-    self.animation = { timer = 0, rate = 0.1 }
+    self.animation = {
+        timer = 0,
+        rate = 0.1
+    }
 
-    self.animation.run = { totalFrames = 6, currentFrame = 1, images = {} }
+    self.animation.run = {
+        totalFrames = 6,
+        currentFrame = 1,
+        images = {}
+    }
     for i = 1, self.animation.run.totalFrames do
         self.animation.run.images[i] = love.graphics.newImage("assets/player/run-animation/" .. i .. ".png")
     end
 
-    self.animation.idle = { totalFrames = 4, currentFrame = 1, images = {} }
+    self.animation.idle = {
+        totalFrames = 4,
+        currentFrame = 1,
+        images = {}
+    }
     for i = 1, self.animation.idle.totalFrames do
         self.animation.idle.images[i] = love.graphics.newImage("assets/player/idle-animation/" .. i .. ".png")
     end
 
-    self.animation.air = { totalFrames = 4, currentFrame = 1, images = {} }
+    self.animation.air = {
+        totalFrames = 4,
+        currentFrame = 1,
+        images = {}
+    }
     for i = 1, self.animation.air.totalFrames do
         self.animation.air.images[i] = love.graphics.newImage("assets/player/air-animation/" .. i .. ".png")
     end
@@ -79,11 +108,47 @@ function Player:loadAssets()
     self.animation.height = self.animation.draw:getHeight()
 end
 
-function Player:incrementCoinCount()
+function Player:takeDamage(amount)
+    -- Check if current health status subtracted by the amount taken is larger than 0
+    if self.health.current - amount > 0 then
+        -- if thats the case subtract the amount taken
+        self.health.current = self.health.current - amount
+    else
+        self.health.current = 0
+        self:kill()
+    end
+    print("Player health: ", self.health.current)
+end
+
+--[[
+    This function is responsible for killing the player if the health drops below
+    the specified value in the health table.
+]]
+function Player:kill()
+    print("Player has been killed.")
+    self.isAlive = false
+end
+
+--[[
+    This function is responsbile for respawning the player after the got killed.
+]]
+function Player:respawn()
+    -- Check if player is not alive
+    if not self.isAlive then
+        -- If thats the case position the player back to the specified starting position
+        self.physics.body:setPosition(self.startX, self.startY)
+        -- Reset the health of the player to the specified max health value
+        self.health.current = self.health.max
+        self.isAlive = true
+    end
+end
+
+function Player:collectCoin()
     self.coinCount = self.coinCount + 1
 end
 
 function Player:update(dt)
+    self:respawn()
     self:setAnimState()
     self:setPlayerDirection()
     self:animate(dt)
@@ -222,7 +287,7 @@ function Player:applyFriction(dt)
         --     -- else set xVel to 0
         --     self.xVelocity = 0
         -- end
-    -- If the player is moving the in the left direction
+        -- If the player is moving the in the left direction
     elseif self.xVelocity < 0 then
         self.xVelocity = math.min(self.xVelocity + self.friction * dt, 0)
         -- Do the same thing as in the first if-statement
@@ -259,7 +324,7 @@ function Player:beginContact(fixtureA, fixtureB, collision)
     if fixtureA == self.physics.fixture then
         if ny > 0 then
             self:land(collision)
-        -- Check if ny < 0, then prevent player from getting stuck under collidable object
+            -- Check if ny < 0, then prevent player from getting stuck under collidable object
         elseif ny < 0 then
             self.yVelocity = 0
         end
@@ -267,7 +332,7 @@ function Player:beginContact(fixtureA, fixtureB, collision)
         if ny < 0 then
             self:land(collision)
         elseif ny > 0 then
-        -- Check if ny < 0, then prevent player from getting stuck under collidable object
+            -- Check if ny < 0, then prevent player from getting stuck under collidable object
             self.yVelocity = 0
         end
     end
