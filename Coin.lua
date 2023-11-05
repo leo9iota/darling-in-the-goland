@@ -8,34 +8,34 @@ ActiveCoins = {}
     the position of the coin.
 ]]
 function Coin.new(x, y)
-    local instance = setmetatable({}, Coin)
-    instance.x = x
-    instance.y = y
-    instance.image = love.graphics.newImage("assets/coin.png")
-    instance.width = instance.image:getWidth()
-    instance.height = instance.image:getHeight()
-    instance.scaleX = 1
-    instance.randomTimeOffset = math.random(0, 100)
-    instance.isCoinRemovable = false
+    local coin = setmetatable({}, Coin)
+    coin.x = x
+    coin.y = y
+    coin.image = love.graphics.newImage("assets/coin.png")
+    coin.width = coin.image:getWidth()
+    coin.height = coin.image:getHeight()
+    coin.scaleX = 1
+    coin.randomTimeOffset = math.random(0, 100)
+    coin.isCoinRemovable = false
 
-    instance.physics = {}
-    instance.physics.body = love.physics.newBody(World, instance.x, instance.y, "static")
-    instance.physics.shape = love.physics.newRectangleShape(instance.width, instance.height)
-    instance.physics.fixture = love.physics.newFixture(instance.physics.body, instance.physics.shape)
-    instance.physics.fixture:setSensor(true)
-    table.insert(ActiveCoins, instance)
+    coin.physics = {}
+    coin.physics.body = love.physics.newBody(World, coin.x, coin.y, "static")
+    coin.physics.shape = love.physics.newRectangleShape(coin.width, coin.height)
+    coin.physics.fixture = love.physics.newFixture(coin.physics.body, coin.physics.shape)
+    coin.physics.fixture:setSensor(true)
+    table.insert(ActiveCoins, coin)
 end
 
 --[[
     This function is responsible for removing a coin from the `ActiveCoins` table is the
     player touched the coin. The physical body of the coin is stored inside of the World
-    and doesn't get removed even though we remove the coin instance. To get rid of it, we
+    and doesn't get removed even though we remove the coin coin. To get rid of it, we
     also need to utilize the LÖVE 2D function `body:destroy`.    
 ]]
 function Coin:removeCoin()
-    for index, instance in ipairs(ActiveCoins) do
-        -- Check if the current instance equals to itself
-        if instance == self then
+    for index, coin in ipairs(ActiveCoins) do
+        -- Check if the current coin equals to itself
+        if coin == self then
             Player:collectCoin()
             print("Coin Count: ", Player.coinCount)
             self.physics.body:destroy()
@@ -75,12 +75,12 @@ end
 
 --[[
     This function is responsible for updating all the coins on the map. We loop through
-    the table and update each instance (coin) with the `update(dt)` function provided
+    the table and update each coin (coin) with the `update(dt)` function provided
     by LÖVE 2D.
 ]]
 function Coin.updateAllCoins(dt)
-    for index, instance in ipairs(ActiveCoins) do
-        instance:update(dt)
+    for index, coin in ipairs(ActiveCoins) do
+        coin:update(dt)
     end
 end
 
@@ -99,8 +99,8 @@ end
     the `ActiveCoins` table.
 ]]
 function Coin.drawAllCoins()
-    for index, instance in ipairs(ActiveCoins) do
-        instance:draw()
+    for index, coin in ipairs(ActiveCoins) do
+        coin:draw()
     end
 end
 
@@ -110,11 +110,11 @@ end
     coin.
 ]]
 function Coin.beginContact(fixtureA, fixtureB, collision)
-    for index, instance in ipairs(ActiveCoins) do
-        if fixtureA == instance.physics.fixture or fixtureB == instance.physics.fixture then
+    for index, coin in ipairs(ActiveCoins) do
+        if fixtureA == coin.physics.fixture or fixtureB == coin.physics.fixture then
             if fixtureA == Player.physics.fixture or fixtureB == Player.physics.fixture then
                 -- This is the variable that checks if a object should be removed
-                instance.isCoinRemovable = true
+                coin.isCoinRemovable = true
                 return true
             end
         end
