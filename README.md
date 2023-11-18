@@ -1,23 +1,27 @@
 # Platformer
 
-A generic platformer
+A classic platformer game inspired by the [Super Mario](https://supermario-game.com/) game series.
 
-## 🛠️ Language and Framework
+## 🛠️ Tech Stack
 <div>
     <img src="https://github.com/devicons/devicon/blob/master/icons/lua/lua-original-wordmark.svg" title="Lua" alt="Lua" width="50" height="50" />&nbsp;
     <img src="https://love2d.org/favicon.ico" title="LOVE" alt="LOVE" width="50" height="50" />&nbsp;
 <div>
 
-## ✅ Requirements
+## ▶️ How To Play
 
-1. Download the [LÖVE 2D](https://love2d.org/) framework and create a shortcut
-2. Clone the repository
+1. Download the [LOVE2D](https://love2d.org/) framework and set the environment variable.
+2. Clone the repository and go to the root directory of the project.
 
-```shell
-git clone https://github.com/leo9iota/platformer.git
+```sh
+git clone https://github.com/leo9iota/pong.git && cd pong
 ```
 
-3. Drag the folder onto the LÖVE 2D shortcut
+3. Run the following command and have fun!
+
+```sh
+love .
+```
 
 ## 📈 Progression
 
