@@ -14,9 +14,9 @@ function love.load()
         function call we get gravity. The "initBox2D()" function loads all layers and
         objects that have the custom property "collidable" into the new world.
     ]]
-    Map = STI("maps/map-1.lua", { "box2d" })
+    Map = STI("maps/map-1.lua", {"box2d"})
     World = love.physics.newWorld(0, 0)
-    
+
     --[[
         This function takes 4 functions as arguments but the last two are optional. The
         "beginContact" callback function gets called when two fixtures collide and the
@@ -95,10 +95,12 @@ end
     The workaround is to mark the object outside of the callback and then remove it.
 ]]
 function beginContact(fixtureA, fixtureB, collision)
-    if Coin.beginContact(fixtureA, fixtureB, collision) then return end
+    if Coin.beginContact(fixtureA, fixtureB, collision) then
+        return
+    end
     Player:beginContact(fixtureA, fixtureB, collision)
 end
 
 function endContact(fixtureA, fixtureB, collision)
-   Player:endContact(fixtureA, fixtureB, collision) 
+    Player:endContact(fixtureA, fixtureB, collision)
 end
