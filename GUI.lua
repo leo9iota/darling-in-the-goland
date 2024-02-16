@@ -37,11 +37,11 @@ function GUI:drawHeartCounter()
     -- Iterate over the current player health table
     for i = 1, Player.health.current, 1 do
         local x = self.heartCounter.x + self.heartCounter.spaceBetween * i
-        local shadowOffset = 3
+        local shadowOffset = 2
 
         -- Draw shadow for heart counter with an offset of 3
         love.graphics.setColor(0, 0, 0, 0.5)
-        love.graphics.draw(self.heartCounter.image, x, self.heartCounter.y + shadowOffset, 0, self.heartCounter.scale,
+        love.graphics.draw(self.heartCounter.image, x + shadowOffset, self.heartCounter.y + shadowOffset, 0, self.heartCounter.scale,
             self.heartCounter.scale)
         love.graphics.setColor(1, 1, 1, 1)
 
