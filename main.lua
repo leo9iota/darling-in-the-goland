@@ -7,6 +7,7 @@ local Player = require("Player")
 local Coin = require("Coin")
 local GUI = require("GUI")
 local Spike = require("Spike")
+local Camera = require("Camera")
 
 -- math.randomseed(os.time()) -- Generate truly random numbers
 
@@ -36,7 +37,7 @@ function love.load()
     Coin.new(160, 180)
     Coin.new(320, 150)
     Coin.new(370, 150)
-    
+
     Spike.new(495, 305)
     Spike.new(460, 305)
     Spike.new(425, 305)
@@ -54,25 +55,29 @@ function love.update(dt)
     Coin.updateAllCoins(dt)
     Spike.updateAllSpikes(dt)
     GUI:update(dt)
+    Camera:setPosition(Player.x, 0)
 end
 
 function love.draw()
     love.graphics.draw(background)
-    Map:draw(0, 0, 2, 2)
+    Map:draw(-Camera.x, -Camera.y, Camera.scale, Camera.scale)
 
+    Camera:init()
     --[[
         The "push()" adds the scaling to the stack and the "pop()" function removes the scaling
         from the stack, which means everything outside of these functions will not be affected
         by the scaling
     ]]
-    love.graphics.push()
-    love.graphics.scale(2, 2)
+    -- love.graphics.push()
+    -- love.graphics.scale(2, 2)
 
     Player:draw()
     Coin.drawAllCoins()
     Spike.drawAllSpikes()
 
-    love.graphics.pop()
+    Camera:remove()
+
+    -- love.graphics.pop()
 
     --[[
         The GUI function is called outside of the scaling functions:
