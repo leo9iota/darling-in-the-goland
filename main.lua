@@ -1,11 +1,13 @@
+love.graphics.setDefaultFilter("nearest", "nearest") -- Set filter to have pixel esthetic
+
 -- Import STI library to import maps from Tiled
 local STI = require("sti")
 
 require("Player")
 require("Coin")
 require("GUI")
+require("Spike")
 
-love.graphics.setDefaultFilter("nearest", "nearest") -- Set filter to have pixel esthetic
 -- math.randomseed(os.time()) -- Generate truly random numbers
 
 function love.load()
@@ -30,9 +32,16 @@ function love.load()
     background = love.graphics.newImage("assets/background.png")
     GUI:load()
     Player:load()
+
     Coin.new(160, 180)
     Coin.new(320, 150)
     Coin.new(370, 150)
+    
+    Spike.new(495, 305)
+    Spike.new(460, 305)
+    Spike.new(425, 305)
+    Spike.new(390, 305)
+    Spike.new(355, 305)
 end
 
 --[[
@@ -42,7 +51,8 @@ end
 function love.update(dt)
     World:update(dt)
     Player:update(dt)
-    Coin:updateAllCoins(dt)
+    Coin.updateAllCoins(dt)
+    Spike.updateAllSpikes(dt)
     GUI:update(dt)
 end
 
@@ -57,8 +67,11 @@ function love.draw()
     ]]
     love.graphics.push()
     love.graphics.scale(2, 2)
+
     Player:draw()
-    Coin:drawAllCoins()
+    Coin.drawAllCoins()
+    Spike.drawAllSpikes()
+
     love.graphics.pop()
 
     --[[
@@ -80,9 +93,7 @@ end
 function love.keypressed(key)
     Player:jump(key)
 
-    if key == "escape" then
-        love.event.quit()
-    end
+    if key == "escape" then love.event.quit() end
 end
 
 --[[
@@ -95,9 +106,8 @@ end
     The workaround is to mark the object outside of the callback and then remove it.
 ]]
 function beginContact(fixtureA, fixtureB, collision)
-    if Coin.beginContact(fixtureA, fixtureB, collision) then
-        return
-    end
+    if Coin.beginContact(fixtureA, fixtureB, collision) then return end
+    if Spike.beginContact(fixtureA, fixtureB, collision) then return end
     Player:beginContact(fixtureA, fixtureB, collision)
 end
 

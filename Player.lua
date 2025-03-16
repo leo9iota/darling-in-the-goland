@@ -36,6 +36,13 @@ function Player:load()
         max = 3
     }
 
+    self.color = {
+        red = 1,
+        green = 1,
+        blue = 1,
+        untintSpeed = 3
+    }
+
     --[[
         These variables are responsible for making the player jump if he was grounded recently.
         If the player is unable to jump the next frame he isn't grounded, doesn't feel that
@@ -109,6 +116,8 @@ function Player:loadAssets()
 end
 
 function Player:takeDamage(amount)
+    self:tintRed()
+
     -- Check if current health status subtracted by the amount taken is larger than 0
     if self.health.current - amount > 0 then
         -- if thats the case subtract the amount taken
@@ -130,7 +139,7 @@ function Player:kill()
 end
 
 --[[
-    This function is responsbile for respawning the player after the got killed.
+    This function is responsible for respawning the player after the got killed.
 ]]
 function Player:respawn()
     -- Check if player is not alive
@@ -143,11 +152,23 @@ function Player:respawn()
     end
 end
 
-function Player:collectCoin()
+function Player:tintRed()
+    self.color.green = 0
+    self.color.blue = 0
+end
+
+function Player:untintRed(dt)
+    self.color.red = math.min(self.color.red + self.color.untintSpeed * dt, 1)
+    self.color.green = math.min(self.color.green + self.color.untintSpeed * dt, 1)
+    self.color.blue = math.min(self.color.blue + self.color.untintSpeed * dt, 1)
+end
+
+function Player:incrementCoinCount()
     self.coinCount = self.coinCount + 1
 end
 
 function Player:update(dt)
+    self:untintRed(dt)
     self:respawn()
     self:setAnimState()
     self:setPlayerDirection()
@@ -221,18 +242,14 @@ end
     stored in the "timeFrameDuration" variable.
 ]]
 function Player:decreaseTimeFrame(dt)
-    if not self.isGrounded then
-        self.jumpTimeFrame = self.jumpTimeFrame - dt
-    end
+    if not self.isGrounded then self.jumpTimeFrame = self.jumpTimeFrame - dt end
 end
 
 --[[
     This function is responsible for applying gravity to the world.
 ]]
 function Player:applyGravity(dt)
-    if not self.isGrounded then
-        self.yVelocity = self.yVelocity + self.gravity * dt
-    end
+    if not self.isGrounded then self.yVelocity = self.yVelocity + self.gravity * dt end
 end
 
 --[[
@@ -315,9 +332,7 @@ end
 ]]
 function Player:beginContact(fixtureA, fixtureB, collision)
     -- If the player is already touching ground then skip the whole function
-    if self.isGrounded == true then
-        return
-    end
+    if self.isGrounded == true then return end
 
     local nx, ny = collision:getNormal()
 
@@ -366,9 +381,7 @@ end
 
 function Player:endContact(fixtureA, fixtureB, collision)
     if fixtureA == self.physics.fixture or fixtureB == self.physics.fixture then
-        if self.currentGroundCollision == collision then
-            self.isGrounded = false
-        end
+        if self.currentGroundCollision == collision then self.isGrounded = false end
     end
 end
 
@@ -379,9 +392,9 @@ end
 ]]
 function Player:draw()
     local scaleX = 1
-    if self.playerDirection == "left" then
-        scaleX = -1
-    end
+    if self.playerDirection == "left" then scaleX = -1 end
     -- love.graphics.rectangle("fill", self.x - self.width / 2, self.y - self.height / 2, self.width, self.height)
+    love.graphics.setColor(self.color.red, self.color.green, self.color.blue) -- Draw player color
     love.graphics.draw(self.animation.draw, self.x, self.y, 0, scaleX, 1, self.animation.width / 2, self.animation.height / 2)
+    love.graphics.setColor(1, 1, 1, 1)
 end

@@ -30,13 +30,13 @@ end
     This function is responsible for removing a coin from the `ActiveCoins` table is the
     player touched the coin. The physical body of the coin is stored inside of the World
     and doesn't get removed even though we remove the coin coin. To get rid of it, we
-    also need to utilize the LÖVE 2D function `body:destroy`.    
+    also need to utilize the Love2D function `body:destroy`.    
 ]]
 function Coin:removeCoin()
     for index, coin in ipairs(ActiveCoins) do
         -- Check if the current coin equals to itself
         if coin == self then
-            Player:collectCoin()
+            Player:incrementCoinCount()
             print("Coin Count: ", Player.coinCount)
             self.physics.body:destroy()
             -- If thats the case remove from table

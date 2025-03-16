@@ -25,9 +25,7 @@ function Spike:update(dt)
 end
 
 function Spike.updateAllSpikes(dt)
-    for index, spike in ipairs(ActiveSpikes) do
-        spike:update(dt)
-    end
+    for index, spike in ipairs(ActiveSpikes) do spike:update(dt) end
 end
 
 function Spike:draw()
@@ -35,9 +33,7 @@ function Spike:draw()
 end
 
 function Spike.drawAllSpikes()
-    for index, spike in ipairs(ActiveSpikes) do
-        spike:draw()
-    end
+    for index, spike in ipairs(ActiveSpikes) do spike:draw() end
 end
 
 function Spike.beginContact(fixtureA, fixtureB, collision)
