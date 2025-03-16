@@ -1,4 +1,5 @@
-GUI = {}
+local GUI = {}
+local Player = require("Player")
 
 -- Love 2D load function 
 function GUI:load()
@@ -80,3 +81,5 @@ function GUI:drawCoinCounter()
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.print(Player.coinCount, x, y)
 end
+
+return GUI

@@ -3,10 +3,10 @@ love.graphics.setDefaultFilter("nearest", "nearest") -- Set filter to have pixel
 -- Import STI library to import maps from Tiled
 local STI = require("sti")
 
-require("Player")
-require("Coin")
-require("GUI")
-require("Spike")
+local Player = require("Player")
+local Coin = require("Coin")
+local GUI = require("GUI")
+local Spike = require("Spike")
 
 -- math.randomseed(os.time()) -- Generate truly random numbers
 

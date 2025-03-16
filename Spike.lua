@@ -1,6 +1,7 @@
-Spike = {}
+local Spike = {}
 Spike.__index = Spike
-ActiveSpikes = {}
+local ActiveSpikes = {}
+local Player = require("Player")
 
 function Spike.new(x, y)
     local spike = setmetatable({}, Spike)
@@ -46,3 +47,5 @@ function Spike.beginContact(fixtureA, fixtureB, collision)
         end
     end
 end
+
+return Spike

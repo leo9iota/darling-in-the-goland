@@ -1,6 +1,7 @@
-Coin = {}
+local Coin = {}
 Coin.__index = Coin
-ActiveCoins = {}
+local ActiveCoins = {}
+local Player = require("Player")
 
 --[[
     This function acts like a constructor (similar to Java). We have to do it this way
@@ -79,9 +80,7 @@ end
     by LÖVE 2D.
 ]]
 function Coin.updateAllCoins(dt)
-    for index, coin in ipairs(ActiveCoins) do
-        coin:update(dt)
-    end
+    for index, coin in ipairs(ActiveCoins) do coin:update(dt) end
 end
 
 --[[
@@ -99,9 +98,7 @@ end
     the `ActiveCoins` table.
 ]]
 function Coin.drawAllCoins()
-    for index, coin in ipairs(ActiveCoins) do
-        coin:draw()
-    end
+    for index, coin in ipairs(ActiveCoins) do coin:draw() end
 end
 
 --[[
@@ -120,3 +117,5 @@ function Coin.beginContact(fixtureA, fixtureB, collision)
         end
     end
 end
+
+return Coin
