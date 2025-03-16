@@ -12,24 +12,29 @@ local Camera = require("Camera")
 -- math.randomseed(os.time()) -- Generate truly random numbers
 
 function love.load()
+    local tileSizeInPixels = 16
+
     --[[
         The STI library relies on the open-source Box2D physics engine. With the "newWorld()"
         function call we get gravity. The "initBox2D()" function loads all layers and
         objects that have the custom property "collidable" into the new world.
     ]]
     Map = STI("maps/map-1.lua", {"box2d"})
-    World = love.physics.newWorld(0, 0)
+    World = love.physics.newWorld(0,2000)
 
     --[[
         This function takes 4 functions as arguments but the last two are optional. The
         "beginContact" callback function gets called when two fixtures collide and the
-        "endContact" callback functions gets called when two fixtures that were colling
+        "endContact" callback functions gets called when two fixtures that we are calling
         no longer collide.
     ]]
     World:setCallbacks(beginContact, endContact)
 
     Map:initBox2D(World)
-    Map.layers.Solid.visible = false
+    Map.layers.solid.visible = false
+
+    MapWidth = Map.layers.ground.width * tileSizeInPixels -- Prevent camera to go out of bounds on right side
+
     background = love.graphics.newImage("assets/background.png")
     GUI:load()
     Player:load()
