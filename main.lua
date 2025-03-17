@@ -20,7 +20,7 @@ function love.load()
         objects that have the custom property "collidable" into the new world.
     ]]
     Map = STI("maps/map-1.lua", {"box2d"})
-    World = love.physics.newWorld(0,2000)
+    World = love.physics.newWorld(0, 2000)
 
     --[[
         This function takes 4 functions as arguments but the last two are optional. The
