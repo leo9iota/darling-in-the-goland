@@ -141,3 +141,21 @@ end
 function endContact(fixtureA, fixtureB, collision)
     Player:endContact(fixtureA, fixtureB, collision)
 end
+
+--[[ 
+    Loop through "object" table to get all the entities.
+    NOTE: Different origin points for circles and rectangles in Tiled.
+        - Rectangle: top left
+        - Circle: center
+]]
+function spawnEntities()
+    for i, v in ipairs(Map.layers.entity.objects) do
+        if v.class == "spikes" then
+            Spike.new(v.x + v.width / 2, v.y + v.height / 2) -- The origin point in Tiled is the top left corner, but origin point of the physics module is the center, which means we need an offset 
+        elseif v.class == "stone" then
+            Stone.new(v.x + v.width / 2, v.y + v.height / 2)
+        elseif v.class == "coin" then
+            Coin.new(v.x, v.y) -- In Tiled a circle's origin point is in the center, so we can just pass x and y without offsets
+        end
+    end
+end
