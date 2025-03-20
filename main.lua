@@ -45,13 +45,24 @@ function love.load()
     Coin.new(320, 150)
     Coin.new(370, 150)
 
+    -- Spikes map 1: part 1
     Spike.new(495, 305)
     Spike.new(460, 305)
     Spike.new(425, 305)
     Spike.new(390, 305)
     Spike.new(355, 305)
 
-    Stone.new(100, 3000)
+    -- Spikes map 1: part 2
+    Spike.new(1295, 305)
+    Spike.new(1260, 305)
+    Spike.new(1225, 305)
+    Spike.new(1190, 305)
+    Spike.new(1155, 305)
+    Spike.new(1120, 305)
+    Spike.new(1085, 305)
+    Spike.new(1050, 305)
+
+    Stone.new(840, 30) -- The origin of assets is the center because of Box2D, but the origin of the game world is the top left corner because of Love2D
 end
 
 --[[
