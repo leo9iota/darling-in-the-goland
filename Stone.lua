@@ -1,51 +1,46 @@
-local Stone = {}
+local Stone = {
+    image = love.graphics.newImage("assets/stone.png") -- NOTE: Load image here and not within the "new()" method to avoid unnecessary memory usage
+}
 Stone.__index = Stone
-local ActiveStone = {}
-local Player = require("Player")
+
+Stone.width = Stone.image:getWidth()
+Stone.height = Stone.image:getHeight()
+
+local ActiveStones = {}
 
 function Stone.new(x, y)
     local stone = setmetatable({}, Stone)
     stone.x = x
     stone.y = y
-    stone.image = love.graphics.newImage("assets/stone.png")
-    stone.width = stone.image:getWidth()
-    stone.height = stone.image:getHeight()
-
-    stone.damage = 1 -- The amount of damage the player takes when colliding with a spike
+    stone.r = 0
 
     stone.physics = {}
-    stone.physics.body = love.physics.newBody(World, spike.x, spike.y, "static")
-    stone.physics.shape = love.physics.newRectangleShape(spike.width, spike.height)
-    stone.physics.fixture = love.physics.newFixture(spike.physics.body, spike.physics.shape)
-    stone.physics.fixture:setSensor(true)
-    table.insert(ActiveStone, stone)
+    stone.physics.body = love.physics.newBody(World, stone.x, stone.y, "dynamic")
+    stone.physics.shape = love.physics.newRectangleShape(stone.width, stone.height)
+    stone.physics.fixture = love.physics.newFixture(stone.physics.body, stone.physics.shape)
+    stone.physics.body:setMass(25)
+    table.insert(ActiveStones, stone)
 end
 
 function Stone:update(dt)
-
+    self:syncPhysics()
 end
 
-function Stone.updateAllSpikes(dt)
-    for index, spike in ipairs(ActiveSpikes) do spike:update(dt) end
+function Stone:syncPhysics()
+    self.x, self.y = self.physics.body:getPosition()
+    self.r = self.physics.body:getAngle()
 end
 
 function Stone:draw()
-    love.graphics.draw(Stone.image, Stone.x, Stone.y, 0, Stone.scaleX, 1, Stone.width / 2, Stone.height / 2)
+    love.graphics.draw(self.image, self.x, self.y, self.r, self.scaleX, 1, self.width / 2, self.height / 2)
 end
 
-function Stone.drawAllSpikes()
-    for index, spike in ipairs(ActiveSpikes) do spike:draw() end
+function Stone.updateAll(dt)
+    for i, instance in ipairs(ActiveStones) do instance:update(dt) end
 end
 
-function Stone.beginContact(fixtureA, fixtureB, collision)
-    for index, spike in ipairs(ActiveSpikes) do
-        if fixtureA == spike.physics.fixture or fixtureB == spike.physics.fixture then
-            if fixtureA == Player.physics.fixture or fixtureB == Player.physics.fixture then
-                Player:takeDamage(spike.damage)
-                return true
-            end
-        end
-    end
+function Stone.drawAll()
+    for i, instance in ipairs(ActiveStones) do instance:draw() end
 end
 
 return Stone

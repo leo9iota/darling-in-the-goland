@@ -7,6 +7,7 @@ local Player = require("Player")
 local Coin = require("Coin")
 local GUI = require("GUI")
 local Spike = require("Spike")
+local Stone = require("Stone")
 local Camera = require("Camera")
 
 -- math.randomseed(os.time()) -- Generate truly random numbers
