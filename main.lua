@@ -40,6 +40,7 @@ function love.load()
     GUI:load()
     Player:load()
 
+    -- Create game objects
     Coin.new(160, 180)
     Coin.new(320, 150)
     Coin.new(370, 150)
@@ -49,6 +50,8 @@ function love.load()
     Spike.new(425, 305)
     Spike.new(390, 305)
     Spike.new(355, 305)
+
+    Stone.new(100, 3000)
 end
 
 --[[
@@ -58,8 +61,9 @@ end
 function love.update(dt)
     World:update(dt)
     Player:update(dt)
-    Coin.updateAllCoins(dt)
-    Spike.updateAllSpikes(dt)
+    Coin.updateAll(dt)
+    Spike.updateAll(dt)
+    Stone.updateAll(dt)
     GUI:update(dt)
     Camera:setPosition(Player.x, 0)
 end
@@ -78,8 +82,9 @@ function love.draw()
     -- love.graphics.scale(2, 2)
 
     Player:draw()
-    Coin.drawAllCoins()
-    Spike.drawAllSpikes()
+    Coin.drawAll()
+    Spike.drawAll()
+    Stone.drawAll()
 
     Camera:remove()
 
