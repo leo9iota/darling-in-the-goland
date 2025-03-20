@@ -25,7 +25,7 @@ function Spike:update(dt)
 
 end
 
-function Spike.updateAllSpikes(dt)
+function Spike.updateAll(dt)
     for index, spike in ipairs(ActiveSpikes) do spike:update(dt) end
 end
 
@@ -33,7 +33,7 @@ function Spike:draw()
     love.graphics.draw(self.image, self.x, self.y, 0, self.scaleX, 1, self.width / 2, self.height / 2)
 end
 
-function Spike.drawAllSpikes()
+function Spike.drawAll()
     for index, spike in ipairs(ActiveSpikes) do spike:draw() end
 end
 
