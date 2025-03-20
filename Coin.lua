@@ -79,7 +79,7 @@ end
     the table and update each coin (coin) with the `update(dt)` function provided
     by LÖVE 2D.
 ]]
-function Coin.updateAllCoins(dt)
+function Coin.updateAll(dt)
     for index, coin in ipairs(ActiveCoins) do coin:update(dt) end
 end
 
@@ -97,7 +97,7 @@ end
     This function is responsible for drawing all coins to the screen which are stored inside
     the `ActiveCoins` table.
 ]]
-function Coin.drawAllCoins()
+function Coin.drawAll()
     for index, coin in ipairs(ActiveCoins) do coin:draw() end
 end
 
