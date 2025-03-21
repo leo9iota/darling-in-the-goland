@@ -3,12 +3,13 @@ love.graphics.setDefaultFilter("nearest", "nearest") -- Set filter to have pixel
 -- Import STI library to import maps from Tiled
 local STI = require("sti")
 
-local Player = require("Player")
-local Coin = require("Coin")
-local GUI = require("GUI")
-local Spike = require("Spike")
-local Stone = require("Stone")
-local Camera = require("Camera")
+local Camera = require "Camera"
+local Player = require "Player"
+local Coin = require "Coin"
+local GUI = require "GUI"
+local Spike = require "Spike"
+local Stone = require "Stone"
+local Enemy = require "Enemy"
 
 -- math.randomseed(os.time()) -- Generate truly random numbers
 
@@ -40,6 +41,9 @@ function love.load()
 
     background = love.graphics.newImage("assets/background.png")
     GUI:load()
+
+    Enemy.loadAssets()
+
     Player:load()
 
     spawnEntities()
@@ -55,6 +59,7 @@ function love.update(dt)
     Coin.updateAll(dt)
     Spike.updateAll(dt)
     Stone.updateAll(dt)
+    Enemy.updateAll(dt)
     GUI:update(dt)
     Camera:setPosition(Player.x, 0)
 end
@@ -76,7 +81,7 @@ function love.draw()
     Coin.drawAll()
     Spike.drawAll()
     Stone.drawAll()
-
+    Enemy.drawAll()
     Camera:remove()
 
     -- love.graphics.pop()
@@ -138,6 +143,8 @@ function spawnEntities()
             Spike.new(v.x + v.width / 2, v.y + v.height / 2) -- The origin point in Tiled is the top left corner, but origin point of the physics module is the center, which means we need an offset 
         elseif v.type == "stone" then
             Stone.new(v.x + v.width / 2, v.y + v.height / 2)
+        elseif v.type == "enemy" then
+            Enemy.new(v.x + v.width / 2, v.y + v.height / 2)
         elseif v.type == "coin" then
             Coin.new(v.x, v.y) -- In Tiled a circle's origin point is in the center, so we can just pass x and y without offsets
         end
