@@ -120,6 +120,7 @@ end
 function beginContact(fixtureA, fixtureB, collision)
     if Coin.beginContact(fixtureA, fixtureB, collision) then return end
     if Spike.beginContact(fixtureA, fixtureB, collision) then return end
+    Enemy.beginContact(fixtureA, fixtureB, collision) -- We want the collision callback fn to continue to the code that grounds the player
     Player:beginContact(fixtureA, fixtureB, collision)
 end
 
