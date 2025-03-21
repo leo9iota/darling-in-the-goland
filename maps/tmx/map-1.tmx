@@ -168,10 +168,7 @@
   <object id="63" name="Spikes" type="spikes" x="1207.83" y="288.5" width="34" height="34"/>
   <object id="64" name="Spikes" type="spikes" x="1172.96" y="288.5" width="34" height="34"/>
   <object id="65" name="Spikes" type="spikes" x="1137.96" y="288.5" width="34" height="34"/>
-  <object id="70" name="Enemy" type="enemy" x="1598.83" y="239.5">
-   <point/>
-  </object>
-  <object id="79" name="Enemy" type="enemy" x="1767.5" y="237">
+  <object id="70" name="Enemy" type="enemy" x="1600.83" y="155.5">
    <point/>
   </object>
  </objectgroup>
