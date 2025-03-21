@@ -18,7 +18,7 @@ function Enemy.new(x, y)
     enemy.rotation = 0
 
     enemy.speed = 100
-    enemy.speedMod = 1
+    enemy.speedMultiplier = 1
     enemy.xVel = enemy.speed
 
     enemy.rageCounter = 0
@@ -73,11 +73,11 @@ function Enemy:incrementRage()
     self.rageCounter = self.rageCounter + 1
     if self.rageCounter > self.rageTrigger then
         self.state = "run"
-        self.speedMod = 3
+        self.speedMultiplier = 3
         self.rageCounter = 0
     else
         self.state = "walk"
-        self.speedMod = 1
+        self.speedMultiplier = 1
     end
 end
 
@@ -105,7 +105,7 @@ end
 
 function Enemy:syncPhysics()
     self.x, self.y = self.physics.body:getPosition()
-    self.physics.body:setLinearVelocity(self.xVel * self.speedMod, 100)
+    self.physics.body:setLinearVelocity(self.xVel * self.speedMultiplier, 100)
 end
 
 function Enemy:draw()
