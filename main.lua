@@ -130,11 +130,15 @@ end
 ]]
 function spawnEntities()
     for i, v in ipairs(Map.layers.entity.objects) do
-        if v.class == "spikes" then
+        --[[ 
+            NOTE: Since the latest update in Tiled, the field isn't called "type" anymore, its called "class", but since 
+            I use the old version of the STI lib, its still "type", or until I update the lib.
+        ]]
+        if v.type == "spikes" then
             Spike.new(v.x + v.width / 2, v.y + v.height / 2) -- The origin point in Tiled is the top left corner, but origin point of the physics module is the center, which means we need an offset 
-        elseif v.class == "stone" then
+        elseif v.type == "stone" then
             Stone.new(v.x + v.width / 2, v.y + v.height / 2)
-        elseif v.class == "coin" then
+        elseif v.type == "coin" then
             Coin.new(v.x, v.y) -- In Tiled a circle's origin point is in the center, so we can just pass x and y without offsets
         end
     end
