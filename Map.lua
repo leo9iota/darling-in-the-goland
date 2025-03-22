@@ -1,4 +1,5 @@
 local Map = {}
+local STI = require("sti") -- Import STI library to import maps from Tiled
 
 local TILE_SIZE = 16 -- Constant for the tile size in pixels
 
@@ -8,7 +9,6 @@ function Map:load()
     self.groundLayer = self.level.layers.ground -- Var for Tiled ground layer
     self.entityLayer = self.level.layers.entity -- Var for Tiled entity layer
 
-    
     self.solidLayer.visible = false -- Hide "solid" layer from Tiled
     self.entityLayer.visible = false -- Hide "entity" layer from Tiled
 
@@ -47,6 +47,8 @@ function Map:spawnEntities()
         --[[ 
             NOTE: Since the latest update in Tiled, the field isn't called "type" anymore, its called "class", but since 
             I use the old version of the STI lib, its still "type", or until I update the lib.
+
+            FIXME: Could cause potential bug in the future if ever update to a newer version of the STI lib.
         ]]
         if v.type == "spikes" then
             Spike.new(v.x + v.width / 2, v.y + v.height / 2) -- The origin point in Tiled is the top left corner, but origin point of the physics module is the center, which means we need an offset 
