@@ -39,7 +39,7 @@ end
 
 function love.draw()
     love.graphics.draw(background)
-    Map:draw(-Camera.x, -Camera.y, Camera.scale, Camera.scale)
+    Map.level:draw(-Camera.x, -Camera.y, Camera.scale, Camera.scale)
 
     Camera:init()
     --[[
