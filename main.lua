@@ -1,7 +1,5 @@
 love.graphics.setDefaultFilter("nearest", "nearest") -- Set filter to have pixel esthetic
 
-local STI = require("sti") -- Import STI library to import maps from Tiled
-
 local Map = require "Map"
 local Camera = require "Camera"
 local Player = require "Player"
