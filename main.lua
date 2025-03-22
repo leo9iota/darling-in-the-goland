@@ -12,12 +12,12 @@ local Enemy = require "Enemy"
 -- math.randomseed(os.time()) -- Generate truly random numbers
 
 function love.load()
+    Enemy.loadAssets()
     Map:load()
 
     background = love.graphics.newImage("assets/background.png")
     GUI:load()
 
-    Enemy.loadAssets()
 
     Player:load()
 end
