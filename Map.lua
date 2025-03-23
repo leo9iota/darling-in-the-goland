@@ -1,23 +1,17 @@
 local Map = {}
 
+local STI = require "sti" -- Import STI library to import maps from Tiled
 local Player = require "Player"
 local Coin = require "Coin"
 local Spike = require "Spike"
 local Stone = require "Stone"
 local Enemy = require "Enemy"
 
-local STI = require "sti" -- Import STI library to import maps from Tiled
-
 local TILE_SIZE = 16 -- Constant for the tile size in pixels
 
 function Map:load()
-    self.level = STI("maps/map-1.lua", {"box2d"}) -- FIX: Load level first
     self.currentLevel = 1 -- Variable for storing current level
-    self.solidLayer = self.level.layers.solid -- Var for Tiled solid layer
-    self.groundLayer = self.level.layers.ground -- Var for Tiled ground layer
-    self.entityLayer = self.level.layers.entity -- Var for Tiled entity layer
-    self.solidLayer.visible = false -- Hide "solid" layer from Tiled
-    self.entityLayer.visible = false -- Hide "entity" layer from Tiled
+
     --[[
         The STI library relies on the open-source Box2D physics engine. With the "newWorld()"
         function call we get gravity. The "initBox2D()" function loads all layers and
@@ -31,9 +25,32 @@ function Map:load()
         no longer collide.
     ]]
     World:setCallbacks(beginContact, endContact)
+
+    self:init()
+end
+
+function Map:init()
+    self.level = STI("maps/map-1.lua", {"box2d"}) -- FIX: Load level first
     self.level:initBox2D(World)
+
+    self.solidLayer = self.level.layers.solid -- Var for Tiled solid layer
+    self.groundLayer = self.level.layers.ground -- Var for Tiled ground layer
+    self.entityLayer = self.level.layers.entity -- Var for Tiled entity layer
+    self.solidLayer.visible = false -- Hide "solid" layer from Tiled
+    self.entityLayer.visible = false -- Hide "entity" layer from Tiled 
+
     MapWidth = self.groundLayer.width * TILE_SIZE -- Prevent camera to go out of bounds on right and left side
+
     self:spawnEntities()
+end
+
+function Map:next()
+    self.currentLevel = self.currentLevel + 1
+    self:init()
+end
+
+function Map:clean()
+    self.level:removeLayerBox2D()
 end
 
 --[[ 
