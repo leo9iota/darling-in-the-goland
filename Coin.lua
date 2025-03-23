@@ -33,7 +33,7 @@ end
     and doesn't get removed even though we remove the coin coin. To get rid of it, we
     also need to utilize the Love2D function `body:destroy`.    
 ]]
-function Coin:removeCoin()
+function Coin:remove()
     for index, coin in ipairs(ActiveCoins) do
         -- Check if the current coin equals to itself
         if coin == self then
@@ -51,6 +51,14 @@ function Coin:update(dt)
     self:checkCoinRemoval()
 end
 
+function Coin:removeAll()
+    for i, v in ipairs(ActiveCoins) do -- Loop trough active coin table and destroy them
+        v.physics.body:destroy()
+    end
+
+    ActiveCoins = {} -- Destroying only reference to coin, which will trigger Lua's garbage collector
+end
+
 --[[
     This function removes the coin.
 ]]
@@ -62,7 +70,7 @@ function Coin:checkCoinRemoval()
             passses it's own table as first argument. We need pass the table as an
             argument, to access all it's methods and variables.
         ]]
-        self:removeCoin()
+        self:remove()
     end
 end
 
