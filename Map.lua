@@ -10,7 +10,7 @@ local Enemy = require "Enemy"
 local TILE_SIZE = 16 -- Constant for the tile size in pixels
 
 function Map:load()
-    self.currentLevel = 2 -- Variable for storing current level
+    self.currentLevel = 1 -- Variable for storing current level
 
     --[[
         The STI library relies on the open-source Box2D physics engine. With the "newWorld()"
@@ -31,7 +31,7 @@ function Map:load()
 end
 
 function Map:init()
-    self.level = STI("maps/map-1.lua", {"box2d"}) -- FIX: Load level first
+    self.level = STI("maps/" .. "map-" .. self.currentLevel .. ".lua", {"box2d"}) -- FIX: Load level first
     self.level:initBox2D(World)
 
     self.solidLayer = self.level.layers.solid -- Var for Tiled solid layer
