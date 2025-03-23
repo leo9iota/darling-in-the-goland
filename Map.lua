@@ -53,6 +53,10 @@ end
 
 function Map:clean()
     self.level:removeLayerBox2D("solid")
+    Enemy.removeAll()
+    Coin.removeAll()
+    Stone.removeAll()
+    Spike.removeAll()
 end
 
 --[[ 
