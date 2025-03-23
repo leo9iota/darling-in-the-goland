@@ -37,6 +37,12 @@ function Spike.drawAll()
     for index, spike in ipairs(ActiveSpikes) do spike:draw() end
 end
 
+function Spike.removeAll()
+    for i, v in ipairs(ActiveSpikes) do v.physics.body:destroy() end
+
+    ActiveSpikes = {}
+end
+
 function Spike.beginContact(fixtureA, fixtureB, collision)
     for index, spike in ipairs(ActiveSpikes) do
         if fixtureA == spike.physics.fixture or fixtureB == spike.physics.fixture then
