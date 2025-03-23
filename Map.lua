@@ -10,7 +10,7 @@ local Enemy = require "Enemy"
 local TILE_SIZE = 16 -- Constant for the tile size in pixels
 
 function Map:load()
-    self.currentLevel = 1 -- Variable for storing current level
+    self.currentLevel = 2 -- Variable for storing current level
 
     --[[
         The STI library relies on the open-source Box2D physics engine. With the "newWorld()"
