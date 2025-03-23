@@ -51,7 +51,7 @@ function Coin:update(dt)
     self:checkCoinRemoval()
 end
 
-function Coin:removeAll()
+function Coin.removeAll()
     for i, v in ipairs(ActiveCoins) do -- Loop trough active coin table and destroy them
         v.physics.body:destroy()
     end
