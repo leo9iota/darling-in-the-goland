@@ -122,6 +122,12 @@ function Enemy.drawAll()
     for i, enemy in ipairs(ActiveEnemies) do enemy:draw() end
 end
 
+function Enemy.removeAll()
+    for i, v in ipairs(ActiveEnemies) do v.physics.body:destroy() end
+
+    ActiveEnemies = {}
+end
+
 function Enemy.beginContact(a, b, collision)
     for i, enemy in ipairs(ActiveEnemies) do
         if a == enemy.physics.fixture or b == enemy.physics.fixture then
