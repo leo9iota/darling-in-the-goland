@@ -27,7 +27,6 @@ function Map:load()
     World:setCallbacks(beginContact, endContact)
 
     self:init()
-    self:next()
 end
 
 function Map:init()
@@ -49,6 +48,7 @@ function Map:next()
     self:clean()
     self.currentLevel = self.currentLevel + 1
     self:init()
+    Player:resetPosition()
 end
 
 function Map:clean()
@@ -57,6 +57,10 @@ function Map:clean()
     Coin.removeAll()
     Stone.removeAll()
     Spike.removeAll()
+end
+
+function Map:update()
+    if Player.x > MapWidth - TILE_SIZE then self:next() end
 end
 
 --[[ 

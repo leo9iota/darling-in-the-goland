@@ -144,12 +144,16 @@ end
 function Player:respawn()
     -- Check if player is not alive
     if not self.isAlive then
-        -- If thats the case position the player back to the specified starting position
-        self.physics.body:setPosition(self.startX, self.startY)
+        self:resetPosition()
         -- Reset the health of the player to the specified max health value
         self.health.current = self.health.max
         self.isAlive = true
     end
+end
+
+function Player:resetPosition()
+    -- If thats the case position the player back to the specified starting position
+    self.physics.body:setPosition(self.startX, self.startY)
 end
 
 function Player:tintRed()

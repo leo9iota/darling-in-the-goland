@@ -34,6 +34,7 @@ function love.update(dt)
     Enemy.updateAll(dt)
     GUI:update(dt)
     Camera:setPosition(Player.x, 0)
+    Map:update(dt)
 end
 
 function love.draw()
