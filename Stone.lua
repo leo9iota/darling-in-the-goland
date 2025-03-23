@@ -43,4 +43,10 @@ function Stone.drawAll()
     for i, instance in ipairs(ActiveStones) do instance:draw() end
 end
 
+function Stone.removeAll()
+    for i, v in ipairs(ActiveStones) do v.physics.body:destroy() end
+
+    ActiveStones = {}
+end
+
 return Stone
