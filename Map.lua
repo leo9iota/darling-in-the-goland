@@ -27,6 +27,7 @@ function Map:load()
     World:setCallbacks(beginContact, endContact)
 
     self:init()
+    self:next()
 end
 
 function Map:init()
@@ -45,12 +46,13 @@ function Map:init()
 end
 
 function Map:next()
+    self:clean()
     self.currentLevel = self.currentLevel + 1
     self:init()
 end
 
 function Map:clean()
-    self.level:removeLayerBox2D()
+    self.level:removeLayerBox2D("solid")
 end
 
 --[[ 
