@@ -267,7 +267,7 @@ return {
 
 	--- Remove Box2D fixtures and shapes from world.
 	-- @param index The index or name of the layer being removed
-	box2d_removeLayer = function(map, index)
+	removeLayerBox2D = function(map, index)
 		local layer = assert(map.layers[index], "Layer not found: " .. index)
 		local collision = map.box2d_collision
 
