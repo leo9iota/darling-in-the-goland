@@ -79,31 +79,34 @@ function Player:loadAssets()
         rate = 0.1
     }
 
+    -- Run player animation
     self.animation.run = {
         totalFrames = 6,
         currentFrame = 1,
         images = {}
     }
     for i = 1, self.animation.run.totalFrames do
-        self.animation.run.images[i] = love.graphics.newImage("assets/player/run-animation/" .. i .. ".png")
+        self.animation.run.images[i] = love.graphics.newImage("assets/player/run/zero-two-run-" .. i .. ".png")
     end
 
+    -- Idle player animation
     self.animation.idle = {
         totalFrames = 4,
         currentFrame = 1,
         images = {}
     }
     for i = 1, self.animation.idle.totalFrames do
-        self.animation.idle.images[i] = love.graphics.newImage("assets/player/idle-animation/" .. i .. ".png")
+        self.animation.idle.images[i] = love.graphics.newImage("assets/player/idle/zero-two-idle-" .. i .. ".png")
     end
 
+    -- Air player animation
     self.animation.air = {
         totalFrames = 4,
         currentFrame = 1,
         images = {}
     }
     for i = 1, self.animation.air.totalFrames do
-        self.animation.air.images[i] = love.graphics.newImage("assets/player/air-animation/" .. i .. ".png")
+        self.animation.air.images[i] = love.graphics.newImage("assets/player/idle/zero-two-idle-" .. i .. ".png")
     end
 
     --[[
