@@ -1,8 +1,7 @@
 return {
-  version = "1.10",
+  version = "1.5",
   luaversion = "5.1",
-  tiledversion = "1.11.2",
-  class = "",
+  tiledversion = "1.8.2",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 200,
@@ -10,24 +9,21 @@ return {
   tilewidth = 16,
   tileheight = 16,
   nextlayerid = 6,
-  nextobjectid = 84,
+  nextobjectid = 87,
   properties = {},
   tilesets = {
     {
       name = "Ground Tiles",
       firstgid = 1,
-      class = "",
       tilewidth = 16,
       tileheight = 16,
       spacing = 0,
       margin = 0,
       columns = 14,
-      image = "../assets/tiles.png",
+      image = "../world/tiles.png",
       imagewidth = 224,
       imageheight = 64,
       objectalignment = "unspecified",
-      tilerendersize = "tile",
-      fillmode = "stretch",
       tileoffset = {
         x = 0,
         y = 0
@@ -52,7 +48,6 @@ return {
       height = 23,
       id = 1,
       name = "ground",
-      class = "",
       visible = true,
       opacity = 1,
       offsetx = 0,
@@ -95,7 +90,6 @@ return {
       height = 23,
       id = 2,
       name = "grass",
-      class = "",
       visible = true,
       opacity = 1,
       offsetx = 0,
@@ -135,7 +129,6 @@ return {
       draworder = "topdown",
       id = 3,
       name = "solid",
-      class = "",
       visible = true,
       opacity = 1,
       offsetx = 0,
@@ -188,6 +181,32 @@ return {
           properties = {
             ["collidable"] = true
           }
+        },
+        {
+          id = 85,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 1312,
+          y = 176,
+          width = 128,
+          height = 144,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 86,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 1936,
+          y = 176,
+          width = 128,
+          height = 144,
+          rotation = 0,
+          visible = true,
+          properties = {}
         }
       }
     },
@@ -196,7 +215,6 @@ return {
       draworder = "topdown",
       id = 5,
       name = "entity",
-      class = "",
       visible = true,
       opacity = 1,
       offsetx = 0,
