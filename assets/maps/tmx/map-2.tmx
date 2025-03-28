@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="200" height="23" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="84">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="200" height="23" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="87">
  <editorsettings>
   <export target="../assets/maps/map-2.lua" format="lua"/>
  </editorsettings>
  <tileset firstgid="1" name="Ground Tiles" tilewidth="16" tileheight="16" tilecount="56" columns="14">
-  <image source="../assets/world/tiles.png" width="224" height="64"/>
+  <image source="../../world/tiles.png" width="224" height="64"/>
  </tileset>
  <layer id="1" name="ground" width="200" height="23">
   <data encoding="csv">
@@ -76,6 +76,8 @@
     <property name="collidable" type="bool" value="true"/>
    </properties>
   </object>
+  <object id="85" x="1312" y="176" width="128" height="144"/>
+  <object id="86" x="1936" y="176" width="128" height="144"/>
  </objectgroup>
  <objectgroup color="#1100ff" id="5" name="entity"/>
 </map>
