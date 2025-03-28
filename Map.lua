@@ -30,7 +30,7 @@ function Map:load()
 end
 
 function Map:init()
-    self.level = STI("maps/" .. "map-" .. self.currentLevel .. ".lua", {"box2d"}) -- FIX: Load level first
+    self.level = STI("assets/maps/" .. "map-" .. self.currentLevel .. ".lua", {"box2d"}) -- FIX: Load level first
     self.level:initBox2D(World)
 
     self.solidLayer = self.level.layers.solid -- Var for Tiled solid layer

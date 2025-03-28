@@ -12,7 +12,7 @@ function Coin.new(x, y)
     local coin = setmetatable({}, Coin)
     coin.x = x
     coin.y = y
-    coin.image = love.graphics.newImage("assets/coin.png")
+    coin.image = love.graphics.newImage("assets/world/coin.png")
     coin.width = coin.image:getWidth()
     coin.height = coin.image:getHeight()
     coin.scaleX = 1

@@ -15,7 +15,7 @@ function love.load()
     Enemy.loadAssets()
     Map:load()
 
-    background = love.graphics.newImage("assets/background.png")
+    background = love.graphics.newImage("assets/world/background.png")
     GUI:load()
 
     Player:load()

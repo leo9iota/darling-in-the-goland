@@ -1,5 +1,5 @@
 local Stone = {
-    image = love.graphics.newImage("assets/stone.png") -- NOTE: Load image here and not within the "new()" method to avoid unnecessary memory usage
+    image = love.graphics.newImage("assets/world/stone.png") -- NOTE: Load image here and not within the "new()" method to avoid unnecessary memory usage
 }
 Stone.__index = Stone
 

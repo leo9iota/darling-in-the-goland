@@ -6,7 +6,7 @@ function GUI:load()
     self.coinCounter = {} -- Coin counter table
     self.coinCounter.x = love.graphics.getWidth() - 200 -- Coin counter x position in GUI
     self.coinCounter.y = 50 -- Coin counter y position in GUI
-    self.coinCounter.image = love.graphics.newImage("assets/coin.png") -- Load coin image
+    self.coinCounter.image = love.graphics.newImage("assets/world/coin.png") -- Load coin image
     self.coinCounter.width = self.coinCounter.image:getWidth() -- Get width of coin image
     self.coinCounter.height = self.coinCounter.image:getHeight() -- Get height of coin image
     self.coinCounter.scale = 3 -- Set scaling to 300%
@@ -15,7 +15,7 @@ function GUI:load()
     self.heartCounter = {} -- Heart counter table
     self.heartCounter.x = 0 -- Heart counter x position in GUI
     self.heartCounter.y = 50 -- Heart counter y position in GUI
-    self.heartCounter.image = love.graphics.newImage("assets/heart.png") -- Load heart image
+    self.heartCounter.image = love.graphics.newImage("assets/world/heart.png") -- Load heart image
     self.heartCounter.width = self.heartCounter.image:getWidth() -- Get width of heart image
     self.heartCounter.height = self.heartCounter.image:getHeight() -- Get height of heart image
     self.heartCounter.scale = 3 -- Set scaling to 300%

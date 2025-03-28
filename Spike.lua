@@ -7,7 +7,7 @@ function Spike.new(x, y)
     local spike = setmetatable({}, Spike)
     spike.x = x
     spike.y = y
-    spike.image = love.graphics.newImage("assets/spikes.png")
+    spike.image = love.graphics.newImage("assets/world/spikes.png")
     spike.width = spike.image:getWidth()
     spike.height = spike.image:getHeight()
 
