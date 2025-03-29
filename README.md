@@ -1,4 +1,4 @@
-# Platformer
+# 🏃‍♂️‍➡️ Platformer
 
 A classic platformer game inspired by the [Super Mario](https://supermario-game.com/) game series.
 
