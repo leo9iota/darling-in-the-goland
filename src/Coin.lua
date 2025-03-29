@@ -1,7 +1,7 @@
 local Coin = {}
 Coin.__index = Coin
 local ActiveCoins = {}
-local Player = require("Player")
+local Player = require("src.Player")
 
 --[[
     This function acts like a constructor (similar to Java). We have to do it this way

@@ -1,7 +1,7 @@
 local Spike = {}
 Spike.__index = Spike
 local ActiveSpikes = {}
-local Player = require("Player")
+local Player = require("src.Player")
 
 function Spike.new(x, y)
     local spike = setmetatable({}, Spike)

@@ -1,5 +1,5 @@
 local GUI = {}
-local Player = require("Player")
+local Player = require("src.Player")
 
 -- Love 2D load function 
 function GUI:load()

@@ -1,6 +1,6 @@
 local Enemy = {}
 Enemy.__index = Enemy
-local Player = require("Player")
+local Player = require("src.Player")
 
 local ActiveEnemies = {}
 

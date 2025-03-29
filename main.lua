@@ -1,13 +1,13 @@
 love.graphics.setDefaultFilter("nearest", "nearest") -- Set filter to have pixel esthetic
 
-local Map = require "Map"
-local Camera = require "Camera"
-local Player = require "Player"
-local Coin = require "Coin"
-local GUI = require "GUI"
-local Spike = require "Spike"
-local Stone = require "Stone"
-local Enemy = require "Enemy"
+local Map = require("src.Map")
+local Camera = require("src.Camera")
+local Player = require("src.Player")
+local Coin = require("src.Coin")
+local GUI = require("src.GUI")
+local Spike = require("src.Spike")
+local Stone = require("src.Stone")
+local Enemy = require("src.Enemy")
 
 -- math.randomseed(os.time()) -- Generate truly random numbers
 
