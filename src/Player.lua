@@ -17,7 +17,7 @@ function Player:load()
     self.animState = "idle"
 
     -- Player movement
-    self.jumpForce = -750
+    self.jumpForce = -650
     self.playerDirection = "right"
     --[[
         The "maxSpeed" variable defines the player's maximum speed. The "acceleration" variable
