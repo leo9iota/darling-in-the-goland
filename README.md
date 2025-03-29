@@ -7,6 +7,7 @@ A classic platformer game inspired by the [Super Mario](https://supermario-game.
     <img src="./assets/images/icons/lua.svg" title="Lua" alt="Lua" width="50" height="50" />&nbsp;
     <img src="./assets/images/icons/love2d.svg" title="Love2D" alt="Love2D" width="50" height="50" />&nbsp;
     <img src="./assets/images/icons/tiled.svg" title="Tiled" alt="Tiled" width="50" height="50" />&nbsp;
+    <img src="./assets/images/icons/luarocks.svg" title="LuaRocks" alt="LuaRocks" width="50" height="50" />&nbsp;
 <div>
 
 ## ▶️ How To Play
@@ -27,5 +28,5 @@ love .
 ## 📈 Progression
 
 <div>
-    <img src="assets/images/progress/progress-2025-03-20.png" title="Progression" alt="Progression" />
+    <img src="assets/images/progress/progress-2025-03-29.png" title="Progression" alt="Progression" />
 <div>
