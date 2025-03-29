@@ -1,0 +1,17 @@
+rock_manifest = {
+   doc = {
+      ["README.md"] = "8645d805e6f87de516ac5977982e1a09"
+   },
+   ["hump-0.4-2.rockspec"] = "af8f75ca5264aae7b042c0b919872d98",
+   lua = {
+      hump = {
+         ["camera.lua"] = "5403889f507de4b39994fed17239a84a",
+         ["class.lua"] = "13f3ee6129704c766517cf2369fd6064",
+         ["gamestate.lua"] = "399f36f57990ea60648ebd654476d87f",
+         ["signal.lua"] = "e6f5e2cc381f65a97ae85cd806442ae7",
+         ["timer.lua"] = "9a55482575f497819799331e5b3d7385",
+         ["vector-light.lua"] = "8ce5b4fe365a96bf376b42cc440e29fd",
+         ["vector.lua"] = "791af3b790f732ac8fd3c48ffefedb79"
+      }
+   }
+}
