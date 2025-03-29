@@ -1,11 +1,11 @@
 local Map = {}
 
-local STI = require "lib.sti" -- Import STI library to import maps from Tiled
-local Player = require "src.Player"
-local Coin = require "src.Coin"
-local Spike = require "src.Spike"
-local Stone = require "src.Stone"
-local Enemy = require "src.Enemy"
+local STI = require("lib.sti") -- Import STI library to import maps from Tiled
+local Player = require("src.Player")
+local Coin = require("src.Coin")
+local Spike = require("src.Spike")
+local Stone = require("src.Stone")
+local Enemy = require("src.Enemy")
 
 local TILE_SIZE = 16 -- Constant for the tile size in pixels
 
