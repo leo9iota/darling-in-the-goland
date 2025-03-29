@@ -1,0 +1,25 @@
+commands = {}
+dependencies = {
+   anim8 = {
+      ["v2.3.1-1"] = {}
+   }
+}
+modules = {
+   anim8 = {
+      "anim8/v2.3.1-1"
+   }
+}
+repository = {
+   anim8 = {
+      ["v2.3.1-1"] = {
+         {
+            arch = "installed",
+            commands = {},
+            dependencies = {},
+            modules = {
+               anim8 = "anim8.lua"
+            }
+         }
+      }
+   }
+}
