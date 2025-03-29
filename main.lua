@@ -1,3 +1,6 @@
+-- package.path = "./modules/share/lua/5.4/?.lua;" .. "./modules/share/lua/5.4/?/init.lua;" .. package.path
+-- package.cpath = "./modules/lib/lua/5.4/?.so;" .. package.cpath
+
 love.graphics.setDefaultFilter("nearest", "nearest") -- Set filter to have pixel esthetic
 
 local Map = require("src.Map")
@@ -78,7 +81,9 @@ end
 function love.keypressed(key)
     Player:jump(key)
 
-    if key == "escape" then love.event.quit() end
+    if key == "escape" then
+        love.event.quit()
+    end
 end
 
 --[[
@@ -91,8 +96,12 @@ end
     The workaround is to mark the object outside of the callback and then remove it.
 ]]
 function beginContact(fixtureA, fixtureB, collision)
-    if Coin.beginContact(fixtureA, fixtureB, collision) then return end
-    if Spike.beginContact(fixtureA, fixtureB, collision) then return end
+    if Coin.beginContact(fixtureA, fixtureB, collision) then
+        return
+    end
+    if Spike.beginContact(fixtureA, fixtureB, collision) then
+        return
+    end
     Enemy.beginContact(fixtureA, fixtureB, collision) -- We want the collision callback fn to continue to the code that grounds the player
     Player:beginContact(fixtureA, fixtureB, collision)
 end
