@@ -1,6 +1,6 @@
 local Map = {}
 
-local STI = require "sti" -- Import STI library to import maps from Tiled
+local STI = require "lib.sti" -- Import STI library to import maps from Tiled
 local Player = require "src.Player"
 local Coin = require "src.Coin"
 local Spike = require "src.Spike"
