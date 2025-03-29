@@ -78,7 +78,7 @@ function Map:spawnEntities()
 
             FIXME: Could cause potential bug in the future if ever update to a newer version of the STI lib.
         ]]
-        if v.type == "spikes" then
+        if v.type == "spikes" then -- Use v.type instead of v.class since STI lib didn't update it probably, or will never update it
             Spike.new(v.x + v.width / 2, v.y + v.height / 2) -- The origin point in Tiled is the top left corner, but origin point of the physics module is the center, which means we need an offset 
         elseif v.type == "stone" then
             Stone.new(v.x + v.width / 2, v.y + v.height / 2)
