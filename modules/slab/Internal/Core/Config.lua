@@ -302,7 +302,7 @@ function Config.LoadFile(Path, IsDefault)
 end
 
 function Config.Save(Path, Table, IsDefault)
-	local Result = false
+	local Result, Error = false
 	if Table ~= nil then
 		local Contents = Config.Encode(Table)
 		Result, Error = FileSystem.SaveContents(Path, Contents, IsDefault)
