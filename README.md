@@ -3,6 +3,7 @@
 A classic platformer game inspired by the [Super Mario](https://supermario-game.com/) game series.
 
 ## 🛠️ Tech Stack
+
 <div>
     <img src="./assets/images/icons/lua.svg" title="Lua" alt="Lua" width="50" height="50" />&nbsp;
     <img src="./assets/images/icons/love2d.svg" title="Love2D" alt="Love2D" width="50" height="50" />&nbsp;
