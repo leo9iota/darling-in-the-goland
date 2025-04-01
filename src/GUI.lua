@@ -1,3 +1,4 @@
+-- src/GUI.lua
 local GUI = {}
 local Player = require("src.Player")
 

@@ -1,3 +1,4 @@
+-- conf.lua
 function love.conf(t)
     t.title = "Darling in the Goland"
     t.version = "11.5"

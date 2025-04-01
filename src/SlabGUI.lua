@@ -1,3 +1,4 @@
+-- src/SlabGUI.lua
 local Slab = require("modules.slab")
 
 local SlabGUI = {}

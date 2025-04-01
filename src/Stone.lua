@@ -1,3 +1,4 @@
+-- src/Stone.lua
 local Stone = {
     image = love.graphics.newImage("assets/world/stone.png") -- NOTE: Load image here and not within the "new()" method to avoid unnecessary memory usage
 }

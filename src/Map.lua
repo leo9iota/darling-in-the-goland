@@ -1,3 +1,4 @@
+-- src/Map.lua
 local Map = {}
 
 local STI = require("modules.sti") -- Import STI library to import maps from Tiled

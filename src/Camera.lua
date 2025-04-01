@@ -1,3 +1,4 @@
+-- src/Camera.lua
 local Camera = {
     x = 0,
     y = 0,

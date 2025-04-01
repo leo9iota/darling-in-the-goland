@@ -1,3 +1,4 @@
+-- src/Camera.lua
 local Coin = {}
 Coin.__index = Coin
 local ActiveCoins = {}
