@@ -1,4 +1,4 @@
---- src/GUI.lua
+--- src/gui/GUI.lua
 -- @class GUI
 -- Draws the heart counter and coin counter
 local GUI = {}
