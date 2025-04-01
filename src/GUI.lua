@@ -1,4 +1,6 @@
--- src/GUI.lua
+--- src/GUI.lua
+-- @class GUI
+-- Draws the heart counter and coin counter
 local GUI = {}
 local Player = require("src.Player")
 

@@ -1,4 +1,6 @@
--- src/SlabGUI.lua
+--- src/SlabGUI.lua
+-- @class Slab
+-- Slab library for implementing GUIs
 local Slab = require("modules.slab")
 
 local SlabGUI = {}

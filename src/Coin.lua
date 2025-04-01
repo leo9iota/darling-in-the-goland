@@ -1,4 +1,6 @@
--- src/Camera.lua
+--- src/Camera.lua
+-- @class Coin
+-- Coin game objects that the player picks up
 local Coin = {}
 Coin.__index = Coin
 local ActiveCoins = {}

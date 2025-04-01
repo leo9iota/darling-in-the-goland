@@ -1,4 +1,6 @@
--- src/Stone.lua
+--- src/Stone.lua
+-- @class Stone
+-- Stone that is a game object that can be moved and behaves like a physics object
 local Stone = {
     image = love.graphics.newImage("assets/world/stone.png") -- NOTE: Load image here and not within the "new()" method to avoid unnecessary memory usage
 }

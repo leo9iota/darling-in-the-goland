@@ -1,4 +1,6 @@
--- src/Spike.lua
+--- src/Spike.lua
+-- @class Spike
+-- Spikes that deal damage to the player if collides
 local Spike = {}
 Spike.__index = Spike
 local ActiveSpikes = {}

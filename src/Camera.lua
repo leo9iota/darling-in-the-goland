@@ -1,4 +1,6 @@
--- src/Camera.lua
+--- src/Camera.lua
+-- @class Camera
+-- Game world camera that moves with the player
 local Camera = {
     x = 0,
     y = 0,

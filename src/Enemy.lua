@@ -1,4 +1,6 @@
--- src/Enemy.lua
+--- src/Enemy.lua
+-- @class Enemy
+-- Enemy that deals damage if collides with player
 local Enemy = {}
 Enemy.__index = Enemy
 local Player = require("src.Player")
