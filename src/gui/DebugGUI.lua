@@ -27,7 +27,7 @@ function DebugGUI:load()
         1,
         1,
         0,
-        0.9,
+        0.75,
     }
 
     -- Background color for debug panel
