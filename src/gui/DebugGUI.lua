@@ -79,7 +79,7 @@ function DebugGUI:draw()
 
     -- Draw background panel
     love.graphics.setColor(self.bgColor)
-    love.graphics.rectangle("fill", 10, 10, 220, 160)
+    love.graphics.rectangle("fill", 10, 10, 220, 185)
 
     -- Draw metrics text
     love.graphics.setColor(self.textColor)
@@ -97,19 +97,19 @@ function DebugGUI:draw()
     love.graphics.print("Entities:", 20, y)
     y = y + 20
 
-    love.graphics.print(string.format("  Coins: %d", self.entityCounts.coins), 20, y)
+    love.graphics.print(string.format("    Coins: %d", self.entityCounts.coins), 20, y)
     y = y + 20
 
-    love.graphics.print(string.format("  Enemies: %d", self.entityCounts.enemies), 20, y)
+    love.graphics.print(string.format("    Enemies: %d", self.entityCounts.enemies), 20, y)
     y = y + 20
 
-    love.graphics.print(string.format("  Spikes: %d", self.entityCounts.spikes), 20, y)
+    love.graphics.print(string.format("    Spikes: %d", self.entityCounts.spikes), 20, y)
     y = y + 20
 
-    love.graphics.print(string.format("  Stones: %d", self.entityCounts.stones), 20, y)
+    love.graphics.print(string.format("    Stones: %d", self.entityCounts.stones), 20, y)
     y = y + 20
 
-    love.graphics.print(string.format("  Total: %d", self.entityCounts.total), 20, y)
+    love.graphics.print(string.format("Total: %d", self.entityCounts.total), 20, y)
 
     -- Restore graphics state
     love.graphics.setFont(prevFont)
