@@ -4,7 +4,7 @@
 local DebugGUI = {}
 
 -- Default state is hidden
-DebugGUI.active = false
+DebugGUI.active = true -- Set to true by default for testing
 
 -- Metrics storage
 DebugGUI.fps = 0
@@ -47,10 +47,13 @@ function DebugGUI:update(dt)
     -- Update metrics
     self.fps = love.timer.getFPS()
     self.memoryUsage = collectgarbage("count") / 1024 -- Convert KB to MB
-    self.drawCalls = love.graphics.getStats().drawcalls
+
+    -- Get the current stats (including drawcalls)
+    local stats = love.graphics.getStats()
+    self.drawCalls = stats.drawcalls
 end
 
-function DebugGUI:updateEntityCounts(coins, enemies, spikes, stones)
+function DebugGUI:updateEntityCount(coins, enemies, spikes, stones)
     if not self.active then
         return
     end
@@ -76,7 +79,7 @@ function DebugGUI:draw()
 
     -- Draw background panel
     love.graphics.setColor(self.bgColor)
-    love.graphics.rectangle("fill", 10, 10, 200, 150)
+    love.graphics.rectangle("fill", 10, 10, 220, 160)
 
     -- Draw metrics text
     love.graphics.setColor(self.textColor)
@@ -98,6 +101,12 @@ function DebugGUI:draw()
     y = y + 20
 
     love.graphics.print(string.format("  Enemies: %d", self.entityCounts.enemies), 20, y)
+    y = y + 20
+
+    love.graphics.print(string.format("  Spikes: %d", self.entityCounts.spikes), 20, y)
+    y = y + 20
+
+    love.graphics.print(string.format("  Stones: %d", self.entityCounts.stones), 20, y)
     y = y + 20
 
     love.graphics.print(string.format("  Total: %d", self.entityCounts.total), 20, y)

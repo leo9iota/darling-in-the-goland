@@ -11,6 +11,11 @@ Stone.height = Stone.image:getHeight()
 
 local ActiveStones = {}
 
+-- Basically a getter method
+function Stone:getCount()
+    return #ActiveStones
+end
+
 function Stone.new(x, y)
     local stone = setmetatable({}, Stone)
     stone.x = x

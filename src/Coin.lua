@@ -6,6 +6,10 @@ Coin.__index = Coin
 local ActiveCoins = {}
 local Player = require("src.Player")
 
+function Coin:getCount()
+    return #ActiveCoins
+end
+
 --[[
     This function acts like a constructor (similar to Java). We have to do it this way
     because Lua does not support OOP natively. It has two parameters, x and y, which define

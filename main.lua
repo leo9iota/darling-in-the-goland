@@ -4,6 +4,7 @@
 -- package.cpath = "./modules/lib/lua/5.4/?.so;" .. package.cpath
 love.graphics.setDefaultFilter("nearest", "nearest") -- Set filter to have pixel esthetic
 
+-- @import Map, Camera, Player, Coin, HUD, Menu, DebugGUI, Spike, Stone, Enemy
 local Map = require("src.Map")
 local Camera = require("src.Camera")
 local Player = require("src.Player")
@@ -47,10 +48,8 @@ function love.update(dt)
         Camera:setPosition(Player.x, 0)
         Map:update(dt)
 
-        -- Update entity counts for debug display
-        if Coin.coins and Enemy.enemies and Spike.spikes and Stone.stones then
-            DebugGUI:updateEntityCounts(#Coin.coins, #Enemy.enemies, #Spike.spikes, #Stone.stones)
-        end
+        -- Get entity counts directly using the # operator on the internal tables
+        DebugGUI:updateEntityCount(Coin.getCount(), Enemy.getCount(), Spike.getCount(), Stone.getCount())
     end
 
     Menu:update(dt) -- Always update menu

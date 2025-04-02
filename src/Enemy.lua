@@ -2,10 +2,16 @@
 -- @class Enemy
 -- Enemy that deals damage if collides with player
 local Enemy = {}
+local ActiveEnemies = {}
 Enemy.__index = Enemy
+
+-- @import Player
 local Player = require("src.Player")
 
-local ActiveEnemies = {}
+-- Basically a getter method
+function Enemy:getCount()
+    return #ActiveEnemies
+end
 
 function Enemy.removeAll()
     for i, v in ipairs(ActiveEnemies) do v.physics.body:destroy() end
