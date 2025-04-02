@@ -10,6 +10,7 @@ local Player = require("src.Player")
 local Coin = require("src.Coin")
 local HUD = require("src.gui.HUD")
 local Menu = require("src.gui.Menu")
+local DebugGUI = require("src.gui.DebugGUI")
 local Spike = require("src.Spike")
 local Stone = require("src.Stone")
 local Enemy = require("src.Enemy")
@@ -24,6 +25,7 @@ function love.load()
     background = love.graphics.newImage("assets/world/background.png")
     HUD:load()
     Menu:load()
+    DebugGUI:load()
     Player:load()
 end
 
@@ -44,9 +46,15 @@ function love.update(dt)
         HUD:update(dt)
         Camera:setPosition(Player.x, 0)
         Map:update(dt)
+
+        -- Update entity counts for debug display
+        if Coin.coins and Enemy.enemies and Spike.spikes and Stone.stones then
+            DebugGUI:updateEntityCounts(#Coin.coins, #Enemy.enemies, #Spike.spikes, #Stone.stones)
+        end
     end
 
     Menu:update(dt) -- Always update menu
+    DebugGUI:update(dt)
 end
 
 function love.draw()
@@ -80,6 +88,7 @@ function love.draw()
     ]]
     HUD:draw()
     Menu:draw()
+    DebugGUI:draw()
     -- love.graphics.printf("Hello World", 200, 300, 420, "justify")
 end
 
@@ -92,6 +101,10 @@ function love.keypressed(key)
 
     if key == "escape" then
         Menu:toggle() -- Toggle menu instead of quitting
+    end
+
+    if key == "f3" then -- Common debug toggle key
+        DebugGUI:toggle()
     end
 end
 
