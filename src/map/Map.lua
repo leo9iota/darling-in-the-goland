@@ -1,4 +1,4 @@
---- src/Map.lua
+--- src/map/Map.lua
 -- @class Map
 -- Map for the game world using the STI library and Box2D physics
 local Map = {}

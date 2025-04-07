@@ -3,4 +3,6 @@
 -- Animation system
 local Animation = {}
 
+-- TODO: To be implemented
+
 return Animation
