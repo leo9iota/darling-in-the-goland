@@ -24,6 +24,9 @@ DebugGUI.lineHeight = 20
 DebugGUI.margin = 10
 DebugGUI.warningDrawCallThreshold = 1000
 
+--- load()
+-- Conventional function naming, e.g. t:load(), t:update(), t:draw().
+-- REMEMBER: They are user defined and don't come from Love2D.
 function DebugGUI:load()
     self.font = love.graphics.newFont(14)
 
@@ -55,9 +58,6 @@ function DebugGUI:update(dt)
     self.fps = love.timer.getFPS()
     self.frameTime = dt * 1000 -- milliseconds
     self.memoryUsage = collectgarbage("count") / 1024
-
-    local stats = love.graphics.getStats()
-    self.drawCalls = stats.drawcalls
 end
 
 function DebugGUI:updateEntityCount(coins, enemies, spikes, stones)
@@ -76,6 +76,10 @@ function DebugGUI:draw()
     if not self.active then
         return
     end
+
+    -- Get the current draw calls before we start drawing our debug info
+    local stats = love.graphics.getStats()
+    self.drawCalls = stats.drawcalls
 
     -- Save current graphics state
     local prevFont = love.graphics.getFont()
