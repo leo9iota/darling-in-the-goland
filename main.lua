@@ -5,16 +5,20 @@
 love.graphics.setDefaultFilter("nearest", "nearest") -- Set filter to have pixel esthetic
 
 -- @import Map, Camera, Player, Coin, HUD, Menu, DebugGUI, Spike, Stone, Enemy
-local Map = require("src.Map")
-local Camera = require("src.Camera")
-local Player = require("src.Player")
-local Coin = require("src.Coin")
+local Map = require("src.map.Map")
+local Camera = require("src.core.Camera")
+
+-- GUI import statements
 local HUD = require("src.gui.HUD")
 local Menu = require("src.gui.Menu")
 local DebugGUI = require("src.gui.DebugGUI")
-local Spike = require("src.Spike")
-local Stone = require("src.Stone")
-local Enemy = require("src.Enemy")
+
+-- Entity import statements
+local Player = require("src.entities.Player")
+local Spike = require("src.entities.Spike")
+local Stone = require("src.entities.Stone")
+local Enemy = require("src.entities.Enemy")
+local Coin = require("src.entities.Coin")
 
 -- math.randomseed(os.time()) -- Generate truly random numbers
 

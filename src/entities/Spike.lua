@@ -6,7 +6,7 @@ local ActiveSpikes = {}
 Spike.__index = Spike
 
 -- @import Player
-local Player = require("src.Player")
+local Player = require("src.entities.Player")
 
 -- Basically a getter method
 function Spike:getCount()

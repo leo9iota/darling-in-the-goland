@@ -2,7 +2,7 @@
 -- @class HUD
 -- Draws the heart counter and coin counter
 local HUD = {}
-local Player = require("src.Player")
+local Player = require("src.entities.Player")
 
 -- Love 2D load function 
 function HUD:load()
