@@ -1,25 +1,32 @@
+--- main.lua
+-- Entry point of the Love2D game
 -- package.path = "./modules/share/lua/5.4/?.lua;" .. "./modules/share/lua/5.4/?/init.lua;" .. package.path
 -- package.cpath = "./modules/lib/lua/5.4/?.so;" .. package.cpath
 love.graphics.setDefaultFilter("nearest", "nearest") -- Set filter to have pixel esthetic
 
+-- @import Map, Camera, Player, Coin, HUD, Menu, DebugGUI, Spike, Stone, Enemy
 local Map = require("src.Map")
 local Camera = require("src.Camera")
 local Player = require("src.Player")
 local Coin = require("src.Coin")
-local GUI = require("src.GUI")
+local HUD = require("src.gui.HUD")
+local Menu = require("src.gui.Menu")
+local DebugGUI = require("src.gui.DebugGUI")
 local Spike = require("src.Spike")
 local Stone = require("src.Stone")
 local Enemy = require("src.Enemy")
 
 -- math.randomseed(os.time()) -- Generate truly random numbers
 
+--- love.load() function
+-- Use to load objects and assets
 function love.load()
     Enemy.loadAssets()
     Map:load()
-
     background = love.graphics.newImage("assets/world/background.png")
-    GUI:load()
-
+    HUD:load()
+    Menu:load()
+    DebugGUI:load()
     Player:load()
 end
 
@@ -27,16 +34,26 @@ end
     Each of the functions have to be called inside of `main.lua`. This is because `main.lua`
     is the entry point of every LÖVE 2D game. 
 ]]
+--- love.update(dt)
+-- @param dt Delta time is used to calculate the time between the previous and current frame
 function love.update(dt)
-    World:update(dt)
-    Player:update(dt)
-    Coin.updateAll(dt)
-    Spike.updateAll(dt)
-    Stone.updateAll(dt)
-    Enemy.updateAll(dt)
-    GUI:update(dt)
-    Camera:setPosition(Player.x, 0)
-    Map:update(dt)
+    if not Menu.active then -- Only update game if menu is not active
+        World:update(dt)
+        Player:update(dt)
+        Coin.updateAll(dt)
+        Spike.updateAll(dt)
+        Stone.updateAll(dt)
+        Enemy.updateAll(dt)
+        HUD:update(dt)
+        Camera:setPosition(Player.x, 0)
+        Map:update(dt)
+
+        -- Get entity counts directly using the # operator on the internal tables
+        DebugGUI:updateEntityCount(Coin.getCount(), Enemy.getCount(), Spike.getCount(), Stone.getCount())
+    end
+
+    Menu:update(dt) -- Always update menu
+    DebugGUI:update(dt)
 end
 
 function love.draw()
@@ -51,7 +68,6 @@ function love.draw()
     ]]
     -- love.graphics.push()
     -- love.graphics.scale(2, 2)
-
     Player:draw()
     Coin.drawAll()
     Spike.drawAll()
@@ -69,7 +85,9 @@ function love.draw()
         
         because the GUI should be static.
     ]]
-    GUI:draw()
+    HUD:draw()
+    Menu:draw()
+    DebugGUI:draw()
     -- love.graphics.printf("Hello World", 200, 300, 420, "justify")
 end
 
@@ -81,8 +99,19 @@ function love.keypressed(key)
     Player:jump(key)
 
     if key == "escape" then
-        love.event.quit()
+        Menu:toggle() -- Toggle menu instead of quitting
     end
+
+    if key == "f3" then -- Common debug toggle key
+        DebugGUI:toggle()
+    end
+end
+
+--[[
+    Add mouse press handler for menu button interaction
+]]
+function love.mousepressed(x, y, button)
+    Menu:mousepressed(x, y, button)
 end
 
 --[[

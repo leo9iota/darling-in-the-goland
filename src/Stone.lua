@@ -1,3 +1,6 @@
+--- src/Stone.lua
+-- @class Stone
+-- Stone that is a game object that can be moved and behaves like a physics object
 local Stone = {
     image = love.graphics.newImage("assets/world/stone.png") -- NOTE: Load image here and not within the "new()" method to avoid unnecessary memory usage
 }
@@ -7,6 +10,11 @@ Stone.width = Stone.image:getWidth()
 Stone.height = Stone.image:getHeight()
 
 local ActiveStones = {}
+
+-- Basically a getter method
+function Stone:getCount()
+    return #ActiveStones
+end
 
 function Stone.new(x, y)
     local stone = setmetatable({}, Stone)

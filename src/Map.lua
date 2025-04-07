@@ -1,3 +1,6 @@
+--- src/Map.lua
+-- @class Map
+-- Map for the game world using the STI library and Box2D physics
 local Map = {}
 
 local STI = require("modules.sti") -- Import STI library to import maps from Tiled

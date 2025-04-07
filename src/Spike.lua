@@ -1,7 +1,17 @@
+--- src/Spike.lua
+-- @class Spike
+-- Spikes that deal damage to the player if player collides with spikes
 local Spike = {}
-Spike.__index = Spike
 local ActiveSpikes = {}
+Spike.__index = Spike
+
+-- @import Player
 local Player = require("src.Player")
+
+-- Basically a getter method
+function Spike:getCount()
+    return #ActiveSpikes
+end
 
 function Spike.new(x, y)
     local spike = setmetatable({}, Spike)

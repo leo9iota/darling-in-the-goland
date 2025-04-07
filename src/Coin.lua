@@ -1,7 +1,14 @@
+--- src/Camera.lua
+-- @class Coin
+-- Coin game objects that the player picks up
 local Coin = {}
 Coin.__index = Coin
 local ActiveCoins = {}
 local Player = require("src.Player")
+
+function Coin:getCount()
+    return #ActiveCoins
+end
 
 --[[
     This function acts like a constructor (similar to Java). We have to do it this way

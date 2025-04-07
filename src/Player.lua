@@ -1,3 +1,6 @@
+--- src/Player.lua
+-- @class Player
+-- Player ...
 local Player = {} -- Create "Player" class table (OOP)
 
 function Player:load()
