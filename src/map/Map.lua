@@ -9,6 +9,7 @@ local Spike = require("src.entities.Spike")
 local Stone = require("src.entities.Stone")
 local Enemy = require("src.entities.Enemy")
 local Coin = require("src.entities.Coin")
+local Camera = require("src.core.Camera") -- Import Camera for setting bounds
 
 local TILE_SIZE = 16 -- Constant for the tile size in pixels
 
@@ -45,7 +46,6 @@ function Map:init()
     MapWidth = self.groundLayer.width * TILE_SIZE -- Prevent camera to go out of bounds on right and left side
 
     -- Update camera bounds based on the new map width
-    local Camera = require("src.core.Camera")
     Camera:setBounds(MapWidth)
 
     self:spawnEntities()
