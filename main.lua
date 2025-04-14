@@ -4,7 +4,7 @@
 -- package.cpath = "./modules/lib/lua/5.4/?.so;" .. package.cpath
 love.graphics.setDefaultFilter("nearest", "nearest") -- Set filter to have pixel esthetic
 
--- @import Map, Camera, Player, Coin, HUD, Menu, DebugGUI, Spike, Stone, Enemy
+-- @import Map, Camera, Player, Coin, HUD, Menu, DebugGUI, Spike, Stone, Enemy, Background
 local Map = require("src.map.Map")
 local Camera = require("src.core.Camera")
 
@@ -20,6 +20,9 @@ local Stone = require("src.entities.Stone")
 local Enemy = require("src.entities.Enemy")
 local Coin = require("src.entities.Coin")
 
+-- Visual import statements
+local Background = require("src.visuals.Background")
+
 -- math.randomseed(os.time()) -- Generate truly random numbers
 
 --- love.load() function
@@ -27,7 +30,28 @@ local Coin = require("src.entities.Coin")
 function love.load()
     Enemy.loadAssets()
     Map:load()
-    background = love.graphics.newImage("assets/world/background.png")
+
+    -- Load parallax background with 4 layers
+    -- Define paths to background images (from closest to farthest, following the project convention)
+    local backgroundLayers = {
+        "assets/background/jungle/jungle-background-1.png", -- Closest layer (foreground elements)
+        "assets/background/jungle/jungle-background-2.png", -- Middle-close layer
+        "assets/background/jungle/jungle-background-3.png", -- Middle-far layer
+        "assets/background/jungle/jungle-background-4.png", -- Farthest layer (sky/background)
+    }
+
+    -- Define parallax factors (smaller = slower movement)
+    -- Closest layer moves fastest, farthest layer moves slowest
+    local parallaxFactors = {
+        0.7,
+        0.5,
+        0.3,
+        0.1,
+    }
+
+    -- Initialize background with layers
+    Background:load(backgroundLayers, parallaxFactors)
+
     HUD:load()
     Menu:load()
     DebugGUI:load()
@@ -36,7 +60,7 @@ end
 
 --[[
     Each of the functions have to be called inside of `main.lua`. This is because `main.lua`
-    is the entry point of every LÖVE 2D game. 
+    is the entry point of every LÖVE 2D game.
 ]]
 --- love.update(dt)
 -- @param dt Delta time is used to calculate the time between the previous and current frame
@@ -52,6 +76,9 @@ function love.update(dt)
         Camera:setPosition(Player.x, 0)
         Map:update(dt)
 
+        -- Update background with camera position
+        Background:update(dt, Camera.x)
+
         -- Get entity counts directly using the # operator on the internal tables
         DebugGUI:updateEntityCount(Coin.getCount(), Enemy.getCount(), Spike.getCount(), Stone.getCount())
     end
@@ -61,7 +88,10 @@ function love.update(dt)
 end
 
 function love.draw()
-    love.graphics.draw(background)
+    -- Draw parallax background
+    Background:draw()
+
+    -- Draw map
     Map.level:draw(-Camera.x, -Camera.y, Camera.scale, Camera.scale)
 
     Camera:init()
@@ -86,7 +116,7 @@ function love.draw()
         - push()
         - scale()
         - pop()
-        
+
         because the GUI should be static.
     ]]
     HUD:draw()
@@ -120,7 +150,7 @@ end
 
 --[[
     If the player collects a coin we skip the collision detection for the ground etc.
-    
+
     --- IMPORTANT ---
     You're not allowed to make any changes to the physics World inside of any of these
     callbacks. This is due to the fact that Box2D "locks" the world.
