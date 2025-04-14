@@ -30,5 +30,5 @@ love .
 ## 📈 Progression
 
 <div>
-    <img src="assets/images/progress/progress-2025-03-29.png" title="Progression" alt="Progression" />
+    <img src="assets/images/progress/progress-2025-04-14.png" title="Progression" alt="Progression" />
 <div>
