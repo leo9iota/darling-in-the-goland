@@ -52,6 +52,10 @@ function love.load()
     -- Initialize background with layers
     Background:load(backgroundLayers, parallaxFactors)
 
+    -- Initialize camera with smooth following
+    Camera:setBounds(MapWidth) -- Set camera bounds based on map width
+    Camera:setSmoothing("damped", 5) -- Use damped smoothing with medium stiffness
+
     HUD:load()
     Menu:load()
     DebugGUI:load()
@@ -73,7 +77,11 @@ function love.update(dt)
         Stone.updateAll(dt)
         Enemy.updateAll(dt)
         HUD:update(dt)
-        Camera:setPosition(Player.x, 0)
+
+        -- Update camera to smoothly follow the player
+        Camera:follow(Player.x, 0)
+        Camera:update(dt)
+
         Map:update(dt)
 
         -- Update background with camera position

@@ -40,9 +40,13 @@ function Map:init()
     self.groundLayer = self.level.layers.ground -- Var for Tiled ground layer
     self.entityLayer = self.level.layers.entity -- Var for Tiled entity layer
     self.solidLayer.visible = false -- Hide "solid" layer from Tiled
-    self.entityLayer.visible = false -- Hide "entity" layer from Tiled 
+    self.entityLayer.visible = false -- Hide "entity" layer from Tiled
 
     MapWidth = self.groundLayer.width * TILE_SIZE -- Prevent camera to go out of bounds on right and left side
+
+    -- Update camera bounds based on the new map width
+    local Camera = require("src.core.Camera")
+    Camera:setBounds(MapWidth)
 
     self:spawnEntities()
 end
@@ -66,23 +70,23 @@ function Map:update()
     if Player.x > MapWidth - TILE_SIZE then self:next() end
 end
 
---[[ 
+--[[
     Loop through "object" table to get all the entities.
     NOTE: Different origin points for circles and rectangles in Tiled.
     - Rectangle: top left
     - Circle: center
 ]]
---- This function spawns all game entities 
+--- This function spawns all game entities
 function Map:spawnEntities()
     for i, v in ipairs(self.entityLayer.objects) do
-        --[[ 
-            NOTE: Since the latest update in Tiled, the field isn't called "type" anymore, its called "class", but since 
+        --[[
+            NOTE: Since the latest update in Tiled, the field isn't called "type" anymore, its called "class", but since
             I use the old version of the STI lib, its still "type", or until I update the lib.
 
             FIXME: Could cause potential bug in the future if ever update to a newer version of the STI lib.
         ]]
         if v.type == "spikes" then -- Use v.type instead of v.class since STI lib didn't update it probably, or will never update it
-            Spike.new(v.x + v.width / 2, v.y + v.height / 2) -- The origin point in Tiled is the top left corner, but origin point of the physics module is the center, which means we need an offset 
+            Spike.new(v.x + v.width / 2, v.y + v.height / 2) -- The origin point in Tiled is the top left corner, but origin point of the physics module is the center, which means we need an offset
         elseif v.type == "stone" then
             Stone.new(v.x + v.width / 2, v.y + v.height / 2)
         elseif v.type == "enemy" then
