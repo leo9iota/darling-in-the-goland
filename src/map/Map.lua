@@ -1,14 +1,14 @@
---- src/Map.lua
+--- src/map/Map.lua
 -- @class Map
 -- Map for the game world using the STI library and Box2D physics
 local Map = {}
 
 local STI = require("modules.sti") -- Import STI library to import maps from Tiled
-local Player = require("src.Player")
-local Coin = require("src.Coin")
-local Spike = require("src.Spike")
-local Stone = require("src.Stone")
-local Enemy = require("src.Enemy")
+local Player = require("src.entities.Player")
+local Spike = require("src.entities.Spike")
+local Stone = require("src.entities.Stone")
+local Enemy = require("src.entities.Enemy")
+local Coin = require("src.entities.Coin")
 
 local TILE_SIZE = 16 -- Constant for the tile size in pixels
 

@@ -4,7 +4,7 @@
 local Coin = {}
 Coin.__index = Coin
 local ActiveCoins = {}
-local Player = require("src.Player")
+local Player = require("src.entities.Player")
 
 function Coin:getCount()
     return #ActiveCoins
