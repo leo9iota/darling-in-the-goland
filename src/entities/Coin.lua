@@ -74,7 +74,7 @@ function Coin:checkCoinRemoval()
         --[[
             --- FIX ---
             Use colon operator instead of dot operator. The colon operator implicitly
-            passses it's own table as first argument. We need pass the table as an
+            passes it's own table as first argument. We need pass the table as an
             argument, to access all it's methods and variables.
         ]]
         self:remove()
