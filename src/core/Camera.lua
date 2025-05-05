@@ -1,145 +1,206 @@
 --- src/core/Camera.lua
 -- @class Camera
--- HUMP camera implementation
-local humpCamera = require("hump.camera") -- Import hump camera module
+-- Game world camera that moves with the player with smooth following
+local Camera = {
+    -- Position
+    x = 0,
+    y = 0,
 
-local Camera = {}
+    -- Target position (what the camera is following)
+    targetX = 0,
+    targetY = 0,
 
--- Camera instance
-local cam = nil
+    -- Smoothing settings
+    smoothing = {
+        enabled = true,
+        type = "damped", -- "none", "linear", or "damped"
+        speed = 5, -- For linear smoothing
+        stiffness = 10 -- For damped smoothing (higher = faster)
+    },
 
--- Camera bounds
-local bounds = {
-    left = 0,
-    right = 0
+    -- Deadzone (area where camera doesn't move if target is inside)
+    deadzone = {
+        enabled = false,
+        x = 0,
+        y = 0,
+        width = 100,
+        height = 100
+    },
+
+    -- Bounds (limits where camera can go)
+    bounds = {
+        enabled = true,
+        minX = 0,
+        minY = 0,
+        maxX = 0, -- Will be set based on map width
+        maxY = 0  -- Will be set based on map height
+    },
+
+    scale = 2 -- The value 2 translates to 200% zoom
 }
 
--- Initialize the camera
-function Camera:load()
-    -- Create a new camera instance with default position and zoom
-    cam = humpCamera(0, 0, 1)
-
-    -- Default scale
-    self.scale = 1
-
-    -- Default position
-    self.x = 0
-    self.y = 0
+--- Initialize the camera for rendering
+function Camera:init()
+    love.graphics.push()
+    love.graphics.scale(self.scale, self.scale)
+    -- Round camera position to whole pixels to prevent jiggling of sprites
+    local roundedX = math.floor(self.x + 0.5)
+    local roundedY = math.floor(self.y + 0.5)
+    love.graphics.translate(-roundedX, roundedY) -- Used to move the camera within the game world
 end
 
--- Set camera bounds to prevent it from showing areas outside the map
--- @param mapWidth The width of the map in pixels
-function Camera:setBounds(mapWidth)
-    bounds.right = mapWidth
-    -- We use the screen width to calculate the left bound to prevent showing empty space
-    bounds.left = love.graphics.getWidth() / 2
+--- Remove camera transformations
+function Camera:remove()
+    love.graphics.pop()
 end
 
--- Set the camera smoothing type
--- @param smoothType The type of smoothing ("none", "linear", or "damped")
--- @param value The smoothing value (speed for linear, stiffness for damped)
-function Camera:setSmoothing(smoothType, value)
-    if not cam then
-        self:load()
-    end
+--- Set camera bounds based on map dimensions
+-- @param mapWidth Width of the map
+-- @param mapHeight Height of the map (optional)
+function Camera:setBounds(mapWidth, mapHeight)
+    self.bounds.maxX = mapWidth - love.graphics.getWidth() / self.scale
 
-    if smoothType == "none" then
-        cam.smoother = humpCamera.smooth.none()
-    elseif smoothType == "linear" then
-        cam.smoother = humpCamera.smooth.linear(value or 5)
-    elseif smoothType == "damped" then
-        cam.smoother = humpCamera.smooth.damped(value or 5)
+    if mapHeight then
+        self.bounds.maxY = mapHeight - love.graphics.getHeight() / self.scale
     end
 end
 
--- Make the camera follow a target
--- @param x The x position to follow
--- @param y The y position to follow (optional)
+--- Set the camera's deadzone
+-- @param x X position of deadzone center
+-- @param y Y position of deadzone center
+-- @param width Width of deadzone
+-- @param height Height of deadzone
+function Camera:setDeadzone(x, y, width, height)
+    self.deadzone.enabled = true
+    self.deadzone.x = x or 0
+    self.deadzone.y = y or 0
+    self.deadzone.width = width or 100
+    self.deadzone.height = height or 100
+end
+
+--- Disable the camera's deadzone
+function Camera:disableDeadzone()
+    self.deadzone.enabled = false
+end
+
+--- Set the camera's smoothing
+-- @param type Type of smoothing ("none", "linear", or "damped")
+-- @param amount Amount of smoothing (speed for linear, stiffness for damped)
+function Camera:setSmoothing(type, amount)
+    self.smoothing.enabled = (type ~= "none")
+    self.smoothing.type = type or "damped"
+
+    if type == "linear" then
+        self.smoothing.speed = amount or 5
+    elseif type == "damped" then
+        self.smoothing.stiffness = amount or 10
+    end
+end
+
+--- Immediately set camera position without smoothing
+-- @param x X position
+-- @param y Y position
+function Camera:setPosition(x, y)
+    -- Set target position
+    self.targetX = x - love.graphics.getWidth() / 2 / self.scale
+    self.targetY = y
+
+    -- Apply bounds to target
+    self:applyBounds()
+
+    -- Immediately update camera position to target (no smoothing)
+    self.x = self.targetX
+    self.y = self.targetY
+end
+
+--- Set the target position for the camera to follow
+-- @param x X position
+-- @param y Y position
 function Camera:follow(x, y)
-    if not cam then
-        self:load()
+    -- Set target position
+    self.targetX = x - love.graphics.getWidth() / 2 / self.scale
+    self.targetY = y
+
+    -- Apply deadzone if enabled
+    if self.deadzone.enabled then
+        self:applyDeadzone()
     end
 
-    -- Apply bounds to the target position
-    local targetX = math.max(bounds.left, math.min(x, bounds.right - love.graphics.getWidth() / 2))
+    -- Apply bounds to target
+    self:applyBounds()
 
-    -- Store the current position for external access
-    self.x = cam.x
-    self.y = cam.y
-
-    -- Use lockX for horizontal following only
-    if y then
-        cam:lockPosition(targetX, y)
-    else
-        cam:lockX(targetX)
+    -- If smoothing is disabled, immediately update camera position
+    if not self.smoothing.enabled then
+        self.x = self.targetX
+        self.y = self.targetY
     end
 end
 
--- Update the camera
+--- Apply deadzone to target position
+function Camera:applyDeadzone()
+    local dx = self.targetX - self.x
+    local dy = self.targetY - self.y
+
+    -- Calculate deadzone boundaries
+    local left = self.x - self.deadzone.width / 2
+    local right = self.x + self.deadzone.width / 2
+    local top = self.y - self.deadzone.height / 2
+    local bottom = self.y + self.deadzone.height / 2
+
+    -- Only move camera if target is outside deadzone
+    if self.targetX < left then
+        self.targetX = left
+    elseif self.targetX > right then
+        self.targetX = right
+    else
+        self.targetX = self.x -- Keep camera at current position
+    end
+
+    if self.targetY < top then
+        self.targetY = top
+    elseif self.targetY > bottom then
+        self.targetY = bottom
+    else
+        self.targetY = self.y -- Keep camera at current position
+    end
+end
+
+--- Apply bounds to target position
+function Camera:applyBounds()
+    if self.bounds.enabled then
+        if self.targetX < self.bounds.minX then
+            self.targetX = self.bounds.minX
+        elseif self.targetX > self.bounds.maxX then
+            self.targetX = self.bounds.maxX
+        end
+
+        if self.targetY < self.bounds.minY then
+            self.targetY = self.bounds.minY
+        elseif self.targetY > self.bounds.maxY then
+            self.targetY = self.bounds.maxY
+        end
+    end
+end
+
+--- Update camera position with smoothing
 -- @param dt Delta time
 function Camera:update(dt)
-    if not cam then
-        self:load()
+    if not self.smoothing.enabled then return end
+
+    if self.smoothing.type == "linear" then
+        -- Linear interpolation
+        local speed = self.smoothing.speed * dt
+        self.x = self.x + (self.targetX - self.x) * speed
+        self.y = self.y + (self.targetY - self.y) * speed
+    elseif self.smoothing.type == "damped" then
+        -- Damped spring physics
+        local stiffness = self.smoothing.stiffness
+        local dx = self.targetX - self.x
+        local dy = self.targetY - self.y
+
+        self.x = self.x + dx * stiffness * dt
+        self.y = self.y + dy * stiffness * dt
     end
-
-    -- Update the stored position for external access
-    self.x = cam.x
-    self.y = cam.y
-end
-
--- Initialize the camera for drawing (attach)
-function Camera:init()
-    if not cam then
-        self:load()
-    end
-
-    cam:attach()
-end
-
--- Remove the camera transformations (detach)
-function Camera:remove()
-    if not cam then
-        self:load()
-    end
-
-    cam:detach()
-end
-
--- Get the mouse position in world coordinates
-function Camera:mousePosition()
-    if not cam then
-        self:load()
-    end
-
-    return cam:mousePosition()
-end
-
--- Convert screen coordinates to world coordinates
-function Camera:screenToWorld(x, y)
-    if not cam then
-        self:load()
-    end
-
-    return cam:worldCoords(x, y)
-end
-
--- Convert world coordinates to screen coordinates
-function Camera:worldToScreen(x, y)
-    if not cam then
-        self:load()
-    end
-
-    return cam:cameraCoords(x, y)
-end
-
--- Set the camera zoom level
-function Camera:setZoom(zoom)
-    if not cam then
-        self:load()
-    end
-
-    cam:zoomTo(zoom)
-    self.scale = zoom
 end
 
 return Camera
