@@ -1,12 +1,13 @@
 --- main.lua
 -- Entry point of the Love2D game
--- package.path = "./modules/share/lua/5.4/?.lua;" .. "./modules/share/lua/5.4/?/init.lua;" .. package.path
--- package.cpath = "./modules/lib/lua/5.4/?.so;" .. package.cpath
+package.path = "./modules/share/lua/5.4/?.lua;" .. "./modules/share/lua/5.4/?/init.lua;" .. package.path
+package.cpath = "./modules/lib/lua/5.4/?.so;" .. package.cpath
 love.graphics.setDefaultFilter("nearest", "nearest") -- Set filter to have pixel esthetic
 
 -- @import Map, Camera, Player, Coin, HUD, Menu, DebugGUI, Spike, Stone, Enemy, Background
-local Map = require("src.map.Map")
+local Map = require("src.core.Map")
 local Camera = require("src.core.Camera")
+local Background = require("src.core.Background")
 
 -- GUI import statements
 local HUD = require("src.gui.HUD")
@@ -19,9 +20,6 @@ local Spike = require("src.entities.Spike")
 local Stone = require("src.entities.Stone")
 local Enemy = require("src.entities.Enemy")
 local Coin = require("src.entities.Coin")
-
--- Visual import statements
-local Background = require("src.visuals.Background")
 
 -- math.randomseed(os.time()) -- Generate truly random numbers
 
