@@ -20,6 +20,7 @@ function Spike.new(x, y)
     spike.image = love.graphics.newImage("assets/world/spikes.png")
     spike.width = spike.image:getWidth()
     spike.height = spike.image:getHeight()
+    spike.scaleX = 1 -- Initialize scaleX to 1 (no scaling)
 
     spike.damage = 1 -- The amount of damage the player takes when colliding with a spike
 
@@ -40,7 +41,10 @@ function Spike.updateAll(dt)
 end
 
 function Spike:draw()
-    love.graphics.draw(self.image, self.x, self.y, 0, self.scaleX, 1, self.width / 2, self.height / 2)
+    -- Round position to whole pixels to prevent jiggling
+    local roundedX = math.floor(self.x + 0.5)
+    local roundedY = math.floor(self.y + 0.5)
+    love.graphics.draw(self.image, roundedX, roundedY, 0, self.scaleX, 1, self.width / 2, self.height / 2)
 end
 
 function Spike.drawAll()

@@ -43,7 +43,10 @@ local Camera = {
 function Camera:init()
     love.graphics.push()
     love.graphics.scale(self.scale, self.scale)
-    love.graphics.translate(-self.x, self.y) -- Used to move the camera within the game world
+    -- Round camera position to whole pixels to prevent jiggling of sprites
+    local roundedX = math.floor(self.x + 0.5)
+    local roundedY = math.floor(self.y + 0.5)
+    love.graphics.translate(-roundedX, roundedY) -- Used to move the camera within the game world
 end
 
 --- Remove camera transformations
