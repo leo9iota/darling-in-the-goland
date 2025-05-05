@@ -5,8 +5,10 @@ package.cpath = "./modules/lib/lua/5.4/?.so;" .. package.cpath
 love.graphics.setDefaultFilter("nearest", "nearest") -- Set filter to have pixel esthetic
 
 -- @import Map, Camera, Player, Coin, HUD, Menu, DebugGUI, Spike, Stone, Enemy, Background
-local Map = require("src.map.Map")
+local Map = require("src.core.Map")
 local Camera = require("src.core.Camera")
+local Background = require("src.core.Background")
+
 
 -- GUI import statements
 local HUD = require("src.gui.HUD")
@@ -19,9 +21,6 @@ local Spike = require("src.entities.Spike")
 local Stone = require("src.entities.Stone")
 local Enemy = require("src.entities.Enemy")
 local Coin = require("src.entities.Coin")
-
--- Visual import statements
-local Background = require("src.visuals.Background")
 
 -- math.randomseed(os.time()) -- Generate truly random numbers
 
@@ -53,6 +52,7 @@ function love.load()
     Background:load(backgroundLayers, parallaxFactors)
 
     -- Initialize camera with smooth following
+    Camera:load() -- Initialize the camera
     Camera:setBounds(MapWidth) -- Set camera bounds based on map width
     Camera:setSmoothing("damped", 5) -- Use damped smoothing with medium stiffness
 
