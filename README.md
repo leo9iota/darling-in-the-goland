@@ -32,3 +32,7 @@ love .
 <div>
     <img src="assets/images/progress/progress-2025-04-14.png" title="Progression" alt="Progression" />
 <div>
+
+## To Do
+
+- [ ] Gopher pixel art
