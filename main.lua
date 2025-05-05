@@ -1,7 +1,7 @@
 --- main.lua
 -- Entry point of the Love2D game
--- package.path = "./modules/share/lua/5.4/?.lua;" .. "./modules/share/lua/5.4/?/init.lua;" .. package.path
--- package.cpath = "./modules/lib/lua/5.4/?.so;" .. package.cpath
+package.path = "./modules/share/lua/5.4/?.lua;" .. "./modules/share/lua/5.4/?/init.lua;" .. package.path
+package.cpath = "./modules/lib/lua/5.4/?.so;" .. package.cpath
 love.graphics.setDefaultFilter("nearest", "nearest") -- Set filter to have pixel esthetic
 
 -- @import Map, Camera, Player, Coin, HUD, Menu, DebugGUI, Spike, Stone, Enemy, Background
