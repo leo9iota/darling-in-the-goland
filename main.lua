@@ -4,22 +4,22 @@ package.path = "./modules/share/lua/5.4/?.lua;" .. "./modules/share/lua/5.4/?/in
 package.cpath = "./modules/lib/lua/5.4/?.so;" .. package.cpath
 love.graphics.setDefaultFilter("nearest", "nearest") -- Set filter to have pixel esthetic
 
--- @import Map, Camera, Player, Coin, HUD, Menu, DebugGUI, Spike, Stone, Enemy, Background
+-- Core imports
 local Map = require("src.core.Map")
 local Camera = require("src.core.Camera")
 local Background = require("src.core.Background")
 
--- GUI import statements
-local HUD = require("src.gui.HUD")
-local Menu = require("src.gui.Menu")
-local DebugGUI = require("src.gui.DebugGUI")
-
--- Entity import statements
+-- Entity imports
 local Player = require("src.entities.Player")
 local Spike = require("src.entities.Spike")
 local Stone = require("src.entities.Stone")
 local Enemy = require("src.entities.Enemy")
 local Coin = require("src.entities.Coin")
+
+-- GUI imports
+local HUD = require("src.gui.HUD")
+local Menu = require("src.gui.Menu")
+local DebugGUI = require("src.gui.DebugGUI")
 
 -- math.randomseed(os.time()) -- Generate truly random numbers
 
