@@ -1,0 +1,79 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  BINARY_NAME: darling
+  CMD_PATH: ./cmd/game
+  BUILD_DIR: ./build
+
+tasks:
+  default:
+    desc: List all available tasks
+    silent: true
+    cmd: task --list-all
+
+  # Development
+  run:
+    desc: Run the game
+    cmd: go run {{.CMD_PATH}}
+
+  build:
+    desc: Build the game binary
+    cmds:
+      - go build -o {{.BUILD_DIR}}/{{.BINARY_NAME}}.exe {{.CMD_PATH}}
+    generates:
+      - "{{.BUILD_DIR}}/{{.BINARY_NAME}}.exe"
+
+  clean:
+    desc: Remove build artifacts
+    cmd: rm -rf {{.BUILD_DIR}}/*.exe
+
+  # Code Quality
+  vet:
+    desc: Run go vet
+    cmd: go vet ./...
+
+  fmt:
+    desc: Format all Go source files
+    cmd: gofmt -w -s .
+
+  lint:
+    desc: Run vet and format check
+    cmds:
+      - task: vet
+      - task: fmt
+
+  # Testing
+  test:
+    desc: Run all tests
+    cmd: go test ./...
+
+  test:v:
+    desc: Run all tests (verbose)
+    cmd: go test -v ./...
+
+  test:physics:
+    desc: Run physics engine tests
+    cmd: go test -v ./internal/physics/...
+
+  bench:
+    desc: Run benchmarks
+    cmd: go test -bench=. ./...
+
+  # Dependencies
+  tidy:
+    desc: Tidy go modules
+    cmd: go mod tidy
+
+  deps:
+    desc: Download dependencies
+    cmd: go mod download
+
+  # Full Pipeline
+  check:
+    desc: Run all checks (fmt, vet, test, build)
+    cmds:
+      - task: fmt
+      - task: vet
+      - task: test
+      - task: build
