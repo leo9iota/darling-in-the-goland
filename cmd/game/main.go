@@ -27,6 +27,7 @@ type Game struct {
 	camera     *core.Camera
 	world      *physics.World
 	player     *entity.Player
+	entities   *entity.Manager
 }
 
 func NewGame() (*Game, error) {
@@ -51,25 +52,22 @@ func NewGame() (*Game, error) {
 		return nil, fmt.Errorf("loading tilemap: %w", err)
 	}
 
-	// Create physics world (gravity handled by player, world gravity = 0)
+	// Create physics world (gravity handled by player/entities, world gravity = 0)
 	world := physics.NewWorld(0, 0)
 
 	// Generate static colliders from the solid layer
 	colliders := tm.GenerateColliders(world)
 	log.Printf("Generated %d colliders from solid layer", len(colliders))
 
-	// Log entity spawns (entities created in Phase 6)
-	spawns := tm.EntitySpawns()
-	for _, sp := range spawns {
-		log.Printf("Entity spawn: type=%s pos=(%.0f, %.0f) size=(%.0f, %.0f)",
-			sp.Type, sp.X, sp.Y, sp.Width, sp.Height)
-	}
-
 	// Create player
 	player, err := entity.NewPlayer(100, 280, world)
 	if err != nil {
 		return nil, fmt.Errorf("creating player: %w", err)
 	}
+
+	// Spawn entities from TMX
+	mgr := entity.NewManager()
+	mgr.SpawnFromMap(tm.EntitySpawns(), world, player)
 
 	// Create camera
 	cam := core.NewCamera(screenWidth, screenHeight)
@@ -81,6 +79,7 @@ func NewGame() (*Game, error) {
 		camera:     cam,
 		world:      world,
 		player:     player,
+		entities:   mgr,
 	}, nil
 }
 
@@ -91,7 +90,7 @@ func (g *Game) Update() error {
 
 	dt := 1.0 / float64(ebiten.TPS())
 
-	// Handle jump input (key press, not hold)
+	// Handle jump input
 	if inpututil.IsKeyJustPressed(ebiten.KeyW) || inpututil.IsKeyJustPressed(ebiten.KeyUp) {
 		g.player.Jump()
 	}
@@ -99,27 +98,36 @@ func (g *Game) Update() error {
 	// Update player (movement, gravity, animation)
 	g.player.Update(dt)
 
-	// Step physics (gravity integration, collision detection/resolution, callbacks)
+	// Update entities (coin spin, enemy patrol)
+	g.entities.UpdateAll(dt)
+
+	// Step physics (collision detection/resolution, callbacks)
 	g.world.Update(dt)
+
+	// Remove collected coins after physics step
+	g.entities.RemoveMarked(g.world)
 
 	// Camera follows player
 	g.camera.Follow(g.player.Body.Position.X, g.player.Body.Position.Y)
 	g.camera.Update(dt)
 
-	// Update background parallax from camera position
+	// Update background parallax
 	g.background.Update(g.camera.X)
 
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	// 1. Draw parallax background
+	// 1. Parallax background
 	g.background.Draw(screen)
 
-	// 2. Draw tile layers
+	// 2. Tile layers
 	g.tileMap.Draw(screen, g.camera.X, g.camera.Y)
 
-	// 3. Draw player
+	// 3. Entities (coins, spikes, stones, enemies)
+	g.entities.DrawAll(screen, g.camera.X, g.camera.Y)
+
+	// 4. Player (on top of entities)
 	g.player.Draw(screen, g.camera.X, g.camera.Y)
 }
 
