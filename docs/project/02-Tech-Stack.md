@@ -12,7 +12,7 @@
 | System              | Implementation    | Description                                                   |
 | ------------------- | ----------------- | ------------------------------------------------------------- |
 | Physics             | Custom (in-house) | AABB collision detection, gravity, friction, sensor bodies     |
-| Tilemap             | Custom (in-house) | Tiled `.tmj` (JSON) parser with layer rendering and colliders |
+| Tilemap             | Custom (in-house) | Tiled `.tmx` (XML) parser with layer rendering and colliders  |
 | Animation           | Custom (in-house) | Frame-based sprite animation with state machine               |
 | Camera              | Custom (in-house) | Damped spring follow, deadzone, bounds clamping, 2× scale     |
 | Parallax Background | Custom (in-house) | 4-layer depth-based scrolling with seamless tiling             |
@@ -21,7 +21,7 @@
 
 | Tool                                           | Role             | Notes                                                    |
 | ---------------------------------------------- | ---------------- | -------------------------------------------------------- |
-| [Tiled](https://www.mapeditor.org/)            | Level editor     | Exports `.tmj` (JSON), tile layers + object layers       |
+| [Tiled](https://www.mapeditor.org/)            | Level editor     | Exports `.tmx` (XML), tile layers + object layers        |
 | [Aseprite](https://www.aseprite.org/)          | Pixel art editor | Sprite sheets, animations, background layers             |
 | [GoLand](https://www.jetbrains.com/go/)        | IDE              | JetBrains IDE for Go — also part of the project name pun |
 
@@ -32,11 +32,11 @@
 | Sprites           | PNG    | Pixel art, nearest-neighbor filtering          |
 | Backgrounds       | PNG    | 4 jungle parallax layers                       |
 | Fonts             | TTF    | Public Pixel Font for HUD and menus            |
-| Maps              | TMJ    | Tiled JSON format with tile + entity layers    |
+| Maps              | TMX    | Tiled XML format with tile + entity layers     |
 
 ## Previous Stack (Pre-Migration)
 
-> Prior to [REFACTOR-001](../tasks/todo/REFACTOR-001-Migration-to-Golang.md), the project used:
+> Prior to [REFACTOR-001](../tasks/done/REFACTOR-001-Migration-to-Golang.md), the project used:
 
 | Technology                                             | Role             |
 | ------------------------------------------------------ | ---------------- |
