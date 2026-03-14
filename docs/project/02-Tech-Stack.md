@@ -4,7 +4,7 @@
 
 | Technology                                    | Role               | Notes                                              |
 | --------------------------------------------- | ------------------ | -------------------------------------------------- |
-| [Go](https://go.dev/)                         | Language           | v1.24+, statically typed, single binary output     |
+| [Go](https://go.dev/)                         | Language           | v1.26+, statically typed, single binary output     |
 | [Ebitengine](https://ebitengine.org/)          | Game library       | v2, pure Go (no CGo), 2D rendering and input       |
 
 ## Game Systems

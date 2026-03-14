@@ -10,9 +10,9 @@ Classic platformer game inspired by [Super Mario](https://supermario-game.com/) 
 
 The name is a triple reference:
 
-1. **Darling in the FranXX** (ダーリン・イン・ザ・フランキス) — the mecha anime
-2. **Go** — the programming language the game is written in
-3. **GoLand** — the JetBrains IDE for Go development
+1. **Darling in the FranXX (ダーリン・イン・ザ・フランキス)**: Chinese mecha cartoon.
+2. **Go**: Programming language the game is written in.
+3. **GoLand**: IDE for Go development.
 
 ## Features
 

@@ -7,7 +7,7 @@
 | **Author**  | leo9iota                          |
 | **Created** | 2026-03-14                        |
 | **Source**  | Lua 5.4 / LÖVE 11.5 / STI / Box2D |
-| **Target**  | Go 1.24 / Ebitengine v2           |
+| **Target**  | Go 1.26 / Ebitengine v2           |
 
 ---
 
