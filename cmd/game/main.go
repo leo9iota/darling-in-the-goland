@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"image"
+	_ "image/png" // register PNG decoder
 	"log"
 	"os"
 
@@ -11,6 +12,8 @@ import (
 
 	"github.com/leo9iota/darling-in-the-goland/internal/animation"
 	"github.com/leo9iota/darling-in-the-goland/internal/core"
+	"github.com/leo9iota/darling-in-the-goland/internal/physics"
+	"github.com/leo9iota/darling-in-the-goland/internal/tilemap"
 )
 
 const (
@@ -19,18 +22,23 @@ const (
 	windowWidth  = 1280
 	windowHeight = 720
 
-	cameraPanSpeed = 150.0 // pixels per second
+	cameraPanSpeed = 150.0 // pixels per second (demo movement)
 )
 
 // Game implements the ebiten.Game interface.
 type Game struct {
 	background *core.Background
+	tileMap    *tilemap.TileMap
+	camera     *core.Camera
+	world      *physics.World
 	playerAnim *animation.Animation
-	cameraX    float64
+
+	// Demo: simulated player position (moved with arrow keys until real player in Phase 5)
+	playerX, playerY float64
 }
 
 func NewGame() (*Game, error) {
-	// Load parallax background (closest to farthest)
+	// Load parallax background
 	bg, err := core.NewBackground(
 		[]string{
 			"assets/background/jungle/jungle-background-1.png",
@@ -45,16 +53,49 @@ func NewGame() (*Game, error) {
 		return nil, fmt.Errorf("loading background: %w", err)
 	}
 
-	// Load player idle animation for demo
+	// Load tilemap
+	tm, err := tilemap.New("assets/maps/tmx/map-1.tmx")
+	if err != nil {
+		return nil, fmt.Errorf("loading tilemap: %w", err)
+	}
+
+	// Create physics world (gravity matches Lua: 0, 2000)
+	world := physics.NewWorld(0, 2000)
+
+	// Generate static colliders from the solid layer
+	colliders := tm.GenerateColliders(world)
+	log.Printf("Generated %d colliders from solid layer", len(colliders))
+
+	// Log entity spawns (entities created in Phase 5/6)
+	spawns := tm.EntitySpawns()
+	for _, sp := range spawns {
+		log.Printf("Entity spawn: type=%s pos=(%.0f, %.0f) size=(%.0f, %.0f)",
+			sp.Type, sp.X, sp.Y, sp.Width, sp.Height)
+	}
+
+	// Load player idle animation
 	idleFrames, err := loadFrames("assets/player/idle/zero-two-idle-%d.png", 4)
 	if err != nil {
 		return nil, fmt.Errorf("loading player idle frames: %w", err)
 	}
 	playerAnim := animation.NewAnimation(idleFrames, 0.1)
 
+	// Create camera
+	cam := core.NewCamera(screenWidth, screenHeight)
+	cam.SetBounds(tm.MapWidthPx())
+
+	// Start player near left side of map, on the ground area
+	startX := 100.0
+	startY := 280.0
+
 	return &Game{
 		background: bg,
+		tileMap:    tm,
+		camera:     cam,
+		world:      world,
 		playerAnim: playerAnim,
+		playerX:    startX,
+		playerY:    startY,
 	}, nil
 }
 
@@ -65,33 +106,42 @@ func (g *Game) Update() error {
 
 	dt := 1.0 / float64(ebiten.TPS())
 
-	// Pan camera with arrow keys for demo
+	// Demo: move simulated player position with arrow keys
 	if ebiten.IsKeyPressed(ebiten.KeyRight) || ebiten.IsKeyPressed(ebiten.KeyD) {
-		g.cameraX += cameraPanSpeed * dt
+		g.playerX += cameraPanSpeed * dt
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyLeft) || ebiten.IsKeyPressed(ebiten.KeyA) {
-		g.cameraX -= cameraPanSpeed * dt
+		g.playerX -= cameraPanSpeed * dt
 	}
-	if g.cameraX < 0 {
-		g.cameraX = 0
+	if g.playerX < 0 {
+		g.playerX = 0
 	}
 
-	g.background.Update(g.cameraX)
+	// Camera follows the simulated player
+	g.camera.Follow(g.playerX, g.playerY)
+	g.camera.Update(dt)
+
+	// Update background parallax from camera position
+	g.background.Update(g.camera.X)
+
 	g.playerAnim.Update(dt)
 
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	// Draw parallax background
+	// 1. Draw parallax background
 	g.background.Draw(screen)
 
-	// Draw animated player sprite at center of screen
+	// 2. Draw tile layers
+	g.tileMap.Draw(screen, g.camera.X, g.camera.Y)
+
+	// 3. Draw player sprite at its world position, offset by camera
 	frame := g.playerAnim.CurrentFrame()
 	opts := &ebiten.DrawImageOptions{}
 	fw := float64(frame.Bounds().Dx())
 	fh := float64(frame.Bounds().Dy())
-	opts.GeoM.Translate(float64(screenWidth)/2-fw/2, float64(screenHeight)/2-fh/2)
+	opts.GeoM.Translate(g.playerX-fw/2-g.camera.X, g.playerY-fh/2-g.camera.Y)
 	screen.DrawImage(frame, opts)
 }
 
