@@ -88,33 +88,32 @@
 
 ### Phase 4: Tilemap System
 
-- [ ] Re-export Tiled maps to `.tmj` (JSON)
-  - [ ] Open each `.lua` map in Tiled
-  - [ ] Export as `.tmj` to `assets/maps/`
-  - [ ] Verify JSON contains tile layers, object layers, tileset references
-- [ ] Create `internal/tilemap/loader.go`
-  - [ ] Define JSON structs matching Tiled `.tmj` schema
-  - [ ] `LoadMap(path) (*TileMap, error)`: parse JSON, resolve tileset paths
-  - [ ] Parse custom properties: `collidable`, entity `type`
-- [ ] Create `internal/tilemap/tileset.go`
-  - [ ] Load tileset source image as `*ebiten.Image`
-  - [ ] Compute tile rects: `TileRect(gid) image.Rectangle` (16×16 grid)
-  - [ ] Handle tileset first-GID offset
-- [ ] Create `internal/tilemap/tilemap.go`
-  - [ ] Define `TileMap` struct (layers, tilesets, width, height, tile size)
-  - [ ] `Draw(screen, cameraX, cameraY, scale)`: render visible tile layers
-  - [ ] `GenerateColliders(world)`: create static bodies from `solid` layer
-  - [ ] `GetEntitySpawns() []SpawnPoint`: extract entity objects (type, x, y, w, h)
-  - [ ] Respect layer visibility (hide `solid` and `entity` layers)
-- [ ] Create `internal/core/camera.go`
-  - [ ] Define `Camera` struct (x, y, targetX, targetY, scale, bounds, smoothing)
-  - [ ] `Follow(x, y)`: set target position, center on screen
-  - [ ] `Update(dt)`: damped spring interpolation toward target
-  - [ ] `ApplyBounds()`: clamp to minX/maxX based on map width
-  - [ ] `Apply(opts *ebiten.DrawImageOptions)`: translate + scale GeoM
-  - [ ] `SetBounds(mapWidth)`: compute maxX from map width and screen size
-- [ ] Compute `MapWidth = groundLayer.Width × TileSize`
-- [ ] Verify: first level renders at 2× scale, camera follows a test point smoothly
+- [x] ~~Re-export Tiled maps to `.tmj` (JSON)~~ — parsed `.tmx` (XML) directly instead
+  - [x] ~~Open each `.lua` map in Tiled~~ — used existing `.tmx` files in `assets/maps/tmx/`
+  - [x] ~~Export as `.tmj` to `assets/maps/`~~ — no conversion needed
+  - [x] Verify XML contains tile layers, object layers, tileset references
+- [x] Create `internal/tilemap/loader.go`
+  - [x] Define XML structs matching Tiled `.tmx` schema
+  - [x] `LoadMap(path) (*TileMap, error)`: parse XML, resolve tileset paths
+  - [x] Parse custom properties: `collidable`, entity `type`
+- [x] Create `internal/tilemap/tileset.go`
+  - [x] Load tileset source image as `*ebiten.Image`
+  - [x] Compute tile rects: `TileRect(gid) image.Rectangle` (16×16 grid)
+  - [x] Handle tileset first-GID offset
+- [x] Create `internal/tilemap/tilemap.go`
+  - [x] Define `TileMap` struct (layers, tilesets, width, height, tile size)
+  - [x] `Draw(screen, cameraX, cameraY)`: render visible tile layers
+  - [x] `GenerateColliders(world)`: create static bodies from `solid` layer
+  - [x] `EntitySpawns() []SpawnPoint`: extract entity objects (type, x, y, w, h)
+  - [x] Respect layer visibility (hide `solid` and `entity` layers)
+- [x] Create `internal/core/camera.go`
+  - [x] Define `Camera` struct (x, y, targetX, targetY, bounds, smoothing)
+  - [x] `Follow(x, y)`: set target position, center on screen
+  - [x] `Update(dt)`: exponential damped interpolation toward target
+  - [x] Clamp to minX/maxX based on map width
+  - [x] `SetBounds(mapWidth)`: compute maxX from map width and screen size
+- [x] Compute `MapWidthPx = Width × TileWidth`
+- [x] Verify: first level renders, camera follows a test point smoothly
 
 ### Phase 5: Player & Core Gameplay
 
