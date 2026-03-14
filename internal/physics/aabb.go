@@ -1,10 +1,14 @@
 package physics
 
-import "math"
+import (
+	"math"
+
+	gm "github.com/leo9iota/darling-in-the-goland/internal/math"
+)
 
 // AABB is an Axis-Aligned Bounding Box defined by its min and max corners.
 type AABB struct {
-	Min, Max Vec2
+	Min, Max gm.Vec2
 }
 
 // NewAABB creates an AABB from a center position and dimensions (width, height).
@@ -13,8 +17,8 @@ func NewAABB(centerX, centerY, width, height float64) AABB {
 	halfW := width / 2
 	halfH := height / 2
 	return AABB{
-		Min: Vec2{centerX - halfW, centerY - halfH},
-		Max: Vec2{centerX + halfW, centerY + halfH},
+		Min: gm.Vec2{X: centerX - halfW, Y: centerY - halfH},
+		Max: gm.Vec2{X: centerX + halfW, Y: centerY + halfH},
 	}
 }
 
@@ -29,9 +33,9 @@ func (a AABB) Overlaps(other AABB) bool {
 // ComputeMTV returns the Minimum Translation Vector needed to push this AABB out of
 // the other. The returned vector points from other toward this AABB. If the AABBs don't
 // overlap, a zero vector is returned.
-func (a AABB) ComputeMTV(other AABB) Vec2 {
+func (a AABB) ComputeMTV(other AABB) gm.Vec2 {
 	if !a.Overlaps(other) {
-		return Zero
+		return gm.Zero
 	}
 
 	// Compute overlap on each axis
@@ -58,7 +62,7 @@ func (a AABB) ComputeMTV(other AABB) Vec2 {
 
 	// Push along the axis with smallest penetration
 	if math.Abs(mtvX) < math.Abs(mtvY) {
-		return Vec2{mtvX, 0}
+		return gm.Vec2{X: mtvX, Y: 0}
 	}
-	return Vec2{0, mtvY}
+	return gm.Vec2{X: 0, Y: mtvY}
 }

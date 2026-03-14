@@ -3,6 +3,8 @@ package physics
 import (
 	"math"
 	"unsafe"
+
+	gm "github.com/leo9iota/darling-in-the-goland/internal/math"
 )
 
 // pointerOf returns a uintptr for pointer-based canonical ordering.
@@ -14,7 +16,7 @@ func pointerOf(b *Body) unsafe.Pointer {
 type Contact struct {
 	BodyA  *Body
 	BodyB  *Body
-	Normal Vec2    // points from BodyB toward BodyA
+	Normal gm.Vec2 // points from BodyB toward BodyA
 	Depth  float64 // penetration depth
 }
 
@@ -44,9 +46,9 @@ func detectCollisions(bodies []*Body) []Contact {
 
 			// Normalize MTV to get collision normal
 			depth := math.Sqrt(mtv.X*mtv.X + mtv.Y*mtv.Y)
-			var normal Vec2
+			var normal gm.Vec2
 			if depth > 0 {
-				normal = Vec2{mtv.X / depth, mtv.Y / depth}
+				normal = gm.Vec2{X: mtv.X / depth, Y: mtv.Y / depth}
 			}
 
 			contacts = append(contacts, Contact{
@@ -98,9 +100,7 @@ func resolveContact(c Contact) {
 }
 
 // zeroVelocityAlongNormal stops movement in the direction of the collision normal.
-// For vertical collisions (ground/ceiling), this zeros Y velocity.
-// For horizontal collisions (walls), this zeros X velocity.
-func zeroVelocityAlongNormal(b *Body, normal Vec2) {
+func zeroVelocityAlongNormal(b *Body, normal gm.Vec2) {
 	if math.Abs(normal.Y) > math.Abs(normal.X) {
 		// Vertical collision
 		b.Velocity.Y = 0

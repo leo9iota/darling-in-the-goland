@@ -1,5 +1,9 @@
 package physics
 
+import (
+	gm "github.com/leo9iota/darling-in-the-goland/internal/math"
+)
+
 // BodyType defines how a body behaves in the physics simulation.
 type BodyType int
 
@@ -14,8 +18,8 @@ const (
 
 // Body is a rigid body in the physics world.
 type Body struct {
-	Position Vec2
-	Velocity Vec2
+	Position gm.Vec2
+	Velocity gm.Vec2
 	Width    float64
 	Height   float64
 
@@ -24,7 +28,7 @@ type Body struct {
 	IsSensor     bool    // sensors detect overlap but don't resolve (coins, spikes)
 
 	// Callbacks fired by the world during collision detection.
-	OnBeginContact func(other *Body, normal Vec2)
+	OnBeginContact func(other *Body, normal gm.Vec2)
 	OnEndContact   func(other *Body)
 
 	// UserData allows linking the body back to a game entity.
@@ -34,7 +38,7 @@ type Body struct {
 // NewBody creates a body at (x, y) with the given dimensions and type.
 func NewBody(x, y, width, height float64, bodyType BodyType) *Body {
 	return &Body{
-		Position:     Vec2{x, y},
+		Position:     gm.Vec2{X: x, Y: y},
 		Width:        width,
 		Height:       height,
 		Type:         bodyType,

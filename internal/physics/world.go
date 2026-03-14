@@ -1,21 +1,23 @@
 package physics
 
+import (
+	gm "github.com/leo9iota/darling-in-the-goland/internal/math"
+)
+
 // World manages the physics simulation.
 type World struct {
-	Gravity          Vec2
+	Gravity          gm.Vec2
 	bodies           []*Body
 	previousContacts map[contactPair]bool
 	activeContacts   map[contactPair]bool
 }
 
 // contactPair identifies a unique pair of colliding bodies.
-// Bodies are stored in pointer-order so (a,b) and (b,a) map to the same pair.
 type contactPair struct {
 	a, b *Body
 }
 
 func newContactPair(a, b *Body) contactPair {
-	// Canonical ordering by pointer value to ensure (a,b) == (b,a)
 	if uintptr(pointerOf(a)) > uintptr(pointerOf(b)) {
 		a, b = b, a
 	}
@@ -25,7 +27,7 @@ func newContactPair(a, b *Body) contactPair {
 // NewWorld creates a physics world with the given gravity.
 func NewWorld(gravX, gravY float64) *World {
 	return &World{
-		Gravity:          Vec2{gravX, gravY},
+		Gravity:          gm.Vec2{X: gravX, Y: gravY},
 		previousContacts: make(map[contactPair]bool),
 		activeContacts:   make(map[contactPair]bool),
 	}
@@ -45,7 +47,6 @@ func (w *World) RemoveBody(b *Body) {
 		}
 	}
 
-	// Clean up any contacts involving this body
 	for pair := range w.previousContacts {
 		if pair.a == b || pair.b == b {
 			delete(w.previousContacts, pair)
@@ -58,19 +59,12 @@ func (w *World) RemoveBody(b *Body) {
 	}
 }
 
-// Bodies returns the current list of bodies (read-only use intended).
+// Bodies returns the current list of bodies.
 func (w *World) Bodies() []*Body {
 	return w.bodies
 }
 
 // Update steps the physics simulation by dt seconds.
-//
-// The step order is:
-//  1. Apply gravity to dynamic bodies
-//  2. Integrate velocity into position
-//  3. Detect collisions (N² broadphase)
-//  4. Resolve contacts (push apart via MTV)
-//  5. Fire begin/end contact callbacks
 func (w *World) Update(dt float64) {
 	// 1 & 2: Gravity + integration
 	for _, b := range w.bodies {
@@ -96,19 +90,16 @@ func (w *World) Update(dt float64) {
 		pair := newContactPair(c.BodyA, c.BodyB)
 		w.activeContacts[pair] = true
 
-		// Fire OnBeginContact for new contacts
 		if !w.previousContacts[pair] {
 			if c.BodyA.OnBeginContact != nil {
 				c.BodyA.OnBeginContact(c.BodyB, c.Normal)
 			}
 			if c.BodyB.OnBeginContact != nil {
-				// Invert normal for body B's perspective
 				c.BodyB.OnBeginContact(c.BodyA, c.Normal.Scale(-1))
 			}
 		}
 	}
 
-	// Fire OnEndContact for contacts that ended
 	for pair := range w.previousContacts {
 		if !w.activeContacts[pair] {
 			if pair.a.OnEndContact != nil {
@@ -120,6 +111,5 @@ func (w *World) Update(dt float64) {
 		}
 	}
 
-	// Swap for next frame
 	w.previousContacts = w.activeContacts
 }
