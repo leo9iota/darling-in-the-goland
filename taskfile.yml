@@ -5,6 +5,13 @@ vars:
   BINARY_NAME: darling
   CMD_PATH: ./cmd/game
   BUILD_DIR: ./build
+  VERSION:
+    sh: git describe --tags --always --dirty 2>/dev/null || echo "dev"
+  COMMIT:
+    sh: git rev-parse --short HEAD 2>/dev/null || echo "unknown"
+  BUILD_TIME:
+    sh: date -u +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || echo "unknown"
+  LDFLAGS: -s -w -X main.Version={{.VERSION}} -X main.Commit={{.COMMIT}} -X main.BuildTime={{.BUILD_TIME}}
 
 tasks:
   default:
@@ -12,38 +19,118 @@ tasks:
     silent: true
     cmd: task --list-all
 
-  # Development
+  # ─── Development ───────────────────────────────────────────
   run:
     desc: Run the game
     cmd: go run {{.CMD_PATH}}
 
   build:
-    desc: Build the game binary
+    desc: Build for current OS
     cmds:
-      - go build -o {{.BUILD_DIR}}/{{.BINARY_NAME}}.exe {{.CMD_PATH}}
+      - go build -ldflags "{{.LDFLAGS}}" -o {{.BUILD_DIR}}/{{.BINARY_NAME}}{{exeExt}} {{.CMD_PATH}}
     generates:
-      - "{{.BUILD_DIR}}/{{.BINARY_NAME}}.exe"
+      - "{{.BUILD_DIR}}/{{.BINARY_NAME}}{{exeExt}}"
 
   clean:
-    desc: Remove build artifacts
-    cmd: rm -rf {{.BUILD_DIR}}/*.exe
+    desc: Remove all build artifacts
+    cmds:
+      - rm -rf {{.BUILD_DIR}}/windows/*.exe
+      - rm -rf {{.BUILD_DIR}}/linux/{{.BINARY_NAME}}
+      - rm -rf {{.BUILD_DIR}}/macos/{{.BINARY_NAME}}
+      - rm -rf {{.BUILD_DIR}}/{{.BINARY_NAME}}*
 
-  # Code Quality
+  # ─── Cross-Platform Builds ────────────────────────────────
+  # NOTE: Ebitengine uses CGO (GLFW) on Linux/macOS.
+  # Cross-compiling from Windows requires a cross-compiler (e.g. zig cc).
+  # For CI, build each target on its native runner.
+
+  build:windows:
+    desc: Build for Windows (amd64)
+    env:
+      GOOS: windows
+      GOARCH: amd64
+    cmds:
+      - go build -ldflags "{{.LDFLAGS}}" -o {{.BUILD_DIR}}/windows/{{.BINARY_NAME}}.exe {{.CMD_PATH}}
+    generates:
+      - "{{.BUILD_DIR}}/windows/{{.BINARY_NAME}}.exe"
+
+  build:linux:
+    desc: Build for Linux (amd64) — requires Linux or cross-compiler
+    env:
+      GOOS: linux
+      GOARCH: amd64
+    cmds:
+      - go build -ldflags "{{.LDFLAGS}}" -o {{.BUILD_DIR}}/linux/{{.BINARY_NAME}} {{.CMD_PATH}}
+    generates:
+      - "{{.BUILD_DIR}}/linux/{{.BINARY_NAME}}"
+
+  build:macos:
+    desc: Build for macOS (amd64) — requires macOS or cross-compiler
+    env:
+      GOOS: darwin
+      GOARCH: amd64
+    cmds:
+      - go build -ldflags "{{.LDFLAGS}}" -o {{.BUILD_DIR}}/macos/{{.BINARY_NAME}} {{.CMD_PATH}}
+    generates:
+      - "{{.BUILD_DIR}}/macos/{{.BINARY_NAME}}"
+
+  build:macos-arm:
+    desc: Build for macOS (Apple Silicon) — requires macOS or cross-compiler
+    env:
+      GOOS: darwin
+      GOARCH: arm64
+    cmds:
+      - go build -ldflags "{{.LDFLAGS}}" -o {{.BUILD_DIR}}/macos/{{.BINARY_NAME}}-arm64 {{.CMD_PATH}}
+    generates:
+      - "{{.BUILD_DIR}}/macos/{{.BINARY_NAME}}-arm64"
+
+  build:all:
+    desc: Build for all platforms (use on CI with matrix builds)
+    cmds:
+      - task: build:windows
+      - task: build:linux
+      - task: build:macos
+      - task: build:macos-arm
+
+  # ─── Release ──────────────────────────────────────────────
+  release:
+    desc: Full release pipeline (check + build all + package)
+    cmds:
+      - task: check
+      - task: build:all
+      - task: package
+
+  package:
+    desc: Package builds into zip archives
+    dir: "{{.BUILD_DIR}}"
+    cmds:
+      - cmd: tar -czf windows/{{.BINARY_NAME}}-windows-amd64.tar.gz -C windows {{.BINARY_NAME}}.exe
+        ignore_error: true
+      - cmd: tar -czf linux/{{.BINARY_NAME}}-linux-amd64.tar.gz -C linux {{.BINARY_NAME}}
+        ignore_error: true
+      - cmd: tar -czf macos/{{.BINARY_NAME}}-macos-amd64.tar.gz -C macos {{.BINARY_NAME}}
+        ignore_error: true
+      - cmd: tar -czf macos/{{.BINARY_NAME}}-macos-arm64.tar.gz -C macos {{.BINARY_NAME}}-arm64
+        ignore_error: true
+
+  # ─── Code Quality ─────────────────────────────────────────
   vet:
     desc: Run go vet
     cmd: go vet ./...
 
   fmt:
     desc: Format all Go source files
-    cmd: gofmt -w -s .
+    cmd: gofumpt -w .
 
   lint:
-    desc: Run vet and format check
-    cmds:
-      - task: vet
-      - task: fmt
+    desc: Run golangci-lint
+    cmd: golangci-lint run ./...
 
-  # Testing
+  lint:fix:
+    desc: Run golangci-lint with auto-fix
+    cmd: golangci-lint run --fix ./...
+
+  # ─── Testing ──────────────────────────────────────────────
   test:
     desc: Run all tests
     cmd: go test ./...
@@ -60,7 +147,7 @@ tasks:
     desc: Run benchmarks
     cmd: go test -bench=. ./...
 
-  # Dependencies
+  # ─── Dependencies ─────────────────────────────────────────
   tidy:
     desc: Tidy go modules
     cmd: go mod tidy
@@ -69,7 +156,7 @@ tasks:
     desc: Download dependencies
     cmd: go mod download
 
-  # Full Pipeline
+  # ─── Full Pipeline ────────────────────────────────────────
   check:
     desc: Run all checks (fmt, vet, test, build)
     cmds:
