@@ -16,7 +16,6 @@ const (
 	debugMargin     = 6.0
 	debugPanelX     = 4.0
 	debugPanelY     = 28.0 // below HUD hearts
-	debugFontSize   = 8.0
 )
 
 var (
@@ -49,7 +48,7 @@ func NewDebug() (*Debug, error) {
 
 	face := &text.GoTextFace{
 		Source: fontSrc,
-		Size:   debugFontSize,
+		Size:   FontSmall,
 	}
 
 	return &Debug{

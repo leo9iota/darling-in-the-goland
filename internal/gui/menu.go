@@ -11,12 +11,11 @@ import (
 
 // Menu constants — scaled for 640×360 internal resolution.
 const (
-	menuWidth        = 200.0
-	menuHeight       = 150.0
-	menuButtonWidth  = 150.0
-	menuButtonHeight = 28.0
+	menuWidth        = 220.0
+	menuHeight       = 160.0
+	menuButtonWidth  = 170.0
+	menuButtonHeight = 30.0
 	menuButtonMargin = 10.0
-	menuFontSize     = 10.0
 )
 
 // Button is a clickable menu button.
@@ -45,7 +44,7 @@ func NewMenu(screenW, screenH float64, toggleFn func()) (*Menu, error) {
 
 	face := &text.GoTextFace{
 		Source: fontSrc,
-		Size:   menuFontSize,
+		Size:   FontMedium,
 	}
 
 	mx := (screenW - menuWidth) / 2

@@ -5,7 +5,6 @@ import (
 	"image"
 	"image/color"
 	_ "image/png"
-	"math"
 	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -55,11 +54,9 @@ func NewHUD(screenW, screenH float64) (*HUD, error) {
 		return nil, fmt.Errorf("loading HUD font: %w", err)
 	}
 
-	// Font size matches the scaled coin height for pixel-perfect alignment.
-	fontSize := math.Round(coinH * hudScale)
 	face := &text.GoTextFace{
 		Source: fontSrc,
-		Size:   fontSize,
+		Size:   FontMedium,
 	}
 
 	return &HUD{
