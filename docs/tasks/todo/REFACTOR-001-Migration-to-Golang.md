@@ -50,41 +50,41 @@
 
 ### Phase 3: Custom Physics Engine
 
-- [ ] Create `internal/physics/aabb.go`
-  - [ ] Define `Vec2` struct (X, Y float64)
-  - [ ] Define `AABB` struct (Min, Max Vec2)
-  - [ ] `NewAABB(x, y, w, h)`: center-based constructor
-  - [ ] `Overlaps(other AABB) bool`: axis-aligned overlap test
-  - [ ] `Resolve(other AABB) Vec2`: minimum translation vector
-- [ ] Create `internal/physics/body.go`
-  - [ ] Define `BodyType` enum: `Static`, `Dynamic`, `Kinematic`
-  - [ ] Define `Body` struct
-    - [ ] Position, Velocity (Vec2)
-    - [ ] Width, Height (for AABB generation)
-    - [ ] BodyType, Mass, GravityScale
-    - [ ] FixedRotation, IsSensor flags
-    - [ ] OnBeginContact / OnEndContact callback fields
-  - [ ] `AABB() AABB`: compute AABB from position + dimensions
-  - [ ] `ApplyGravity(gravity Vec2, dt)`: add gravity to velocity
-  - [ ] `Integrate(dt)`: position += velocity × dt
-- [ ] Create `internal/physics/world.go`
-  - [ ] Define `World` struct (bodies slice, gravity Vec2)
-  - [ ] `NewWorld(gravX, gravY)`: constructor
-  - [ ] `AddBody(body)` / `RemoveBody(body)`
-  - [ ] `Update(dt)`: loop: apply gravity → integrate → detect collisions → resolve
-  - [ ] Track active contact pairs for begin/end detection
-- [ ] Create `internal/physics/collision.go`
-  - [ ] Define `Contact` struct (BodyA, BodyB, Normal Vec2, Depth float64)
-  - [ ] `DetectCollisions(bodies) []Contact`: brute-force broadphase
-  - [ ] `ResolveContact(contact)`: push dynamic bodies apart by MTV
-  - [ ] Skip resolution for sensor bodies (but still fire callbacks)
+- [x] Create `internal/physics/aabb.go`
+  - [x] Define `Vec2` struct (X, Y float64)
+  - [x] Define `AABB` struct (Min, Max Vec2)
+  - [x] `NewAABB(x, y, w, h)`: center-based constructor
+  - [x] `Overlaps(other AABB) bool`: axis-aligned overlap test
+  - [x] `Resolve(other AABB) Vec2`: minimum translation vector
+- [x] Create `internal/physics/body.go`
+  - [x] Define `BodyType` enum: `Static`, `Dynamic`, `Kinematic`
+  - [x] Define `Body` struct
+    - [x] Position, Velocity (Vec2)
+    - [x] Width, Height (for AABB generation)
+    - [x] BodyType, Mass, GravityScale
+    - [x] FixedRotation, IsSensor flags
+    - [x] OnBeginContact / OnEndContact callback fields
+  - [x] `AABB() AABB`: compute AABB from position + dimensions
+  - [x] `ApplyGravity(gravity Vec2, dt)`: add gravity to velocity
+  - [x] `Integrate(dt)`: position += velocity × dt
+- [x] Create `internal/physics/world.go`
+  - [x] Define `World` struct (bodies slice, gravity Vec2)
+  - [x] `NewWorld(gravX, gravY)`: constructor
+  - [x] `AddBody(body)` / `RemoveBody(body)`
+  - [x] `Update(dt)`: loop: apply gravity → integrate → detect collisions → resolve
+  - [x] Track active contact pairs for begin/end detection
+- [x] Create `internal/physics/collision.go`
+  - [x] Define `Contact` struct (BodyA, BodyB, Normal Vec2, Depth float64)
+  - [x] `DetectCollisions(bodies) []Contact`: brute-force broadphase
+  - [x] `ResolveContact(contact)`: push dynamic bodies apart by MTV
+  - [x] Skip resolution for sensor bodies (but still fire callbacks)
   - [ ] One-way platform logic: skip resolve if player velocity Y < 0
-- [ ] Write unit tests
-  - [ ] Test AABB overlap detection (overlapping, non-overlapping, edge cases)
-  - [ ] Test gravity integration (body falls at expected rate)
-  - [ ] Test collision resolution (body lands on floor, stops)
-  - [ ] Test sensor detection (callback fires, no position correction)
-- [ ] Verify: `go test ./internal/physics/...` all green
+- [x] Write unit tests
+  - [x] Test AABB overlap detection (overlapping, non-overlapping, edge cases)
+  - [x] Test gravity integration (body falls at expected rate)
+  - [x] Test collision resolution (body lands on floor, stops)
+  - [x] Test sensor detection (callback fires, no position correction)
+- [x] Verify: `go test ./internal/physics/...` all green
 
 ### Phase 4: Tilemap System
 
