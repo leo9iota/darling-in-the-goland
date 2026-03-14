@@ -123,3 +123,8 @@ func (m *Manager) RemoveAll(world *physics.World) {
 	m.Stones = nil
 	m.Enemies = nil
 }
+
+// GetCounts returns the current count of each entity type.
+func (m *Manager) GetCounts() (coins, enemies, spikes, stones int) {
+	return len(m.Coins), len(m.Enemies), len(m.Spikes), len(m.Stones)
+}
