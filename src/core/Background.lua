@@ -1,4 +1,4 @@
---- src/visuals/Background.lua
+    --- src/visuals/Background.lua
 -- @class Background
 -- Background system with parallax effect
 -- Implements a 4-layer parallax background where layer 1 is closest and layer 4 is farthest
