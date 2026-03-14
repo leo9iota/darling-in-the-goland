@@ -117,39 +117,39 @@
 
 ### Phase 5: Player & Core Gameplay
 
-- [ ] Create `internal/input/input.go`
-  - [ ] `IsDown(keys ...ebiten.Key) bool`: any of the keys held
-  - [ ] `IsJustPressed(key ebiten.Key) bool`: pressed this frame only
-- [ ] Create `internal/entity/player.go`
-  - [ ] Define `Player` struct
-    - [ ] Physics body reference
-    - [ ] Position, velocity, dimensions (20×60)
-    - [ ] Health struct (current: 3, max: 3)
-    - [ ] Coin count
-    - [ ] Movement constants (maxSpeed: 200, accel: 1500, friction: 3500, gravity: 1500)
-    - [ ] Jump constants (force: −650, doubleJumpMult: 0.75, coyoteTime: 0.25)
-    - [ ] Animation state, direction, color tint
-  - [ ] `Update(dt)` pipeline:
-    - [ ] `untintRed(dt)`: restore color toward white
-    - [ ] `respawn()`: reset if dead
-    - [ ] `setAnimState()`: idle / run / air based on grounded + velocity
-    - [ ] `setDirection()`: left / right based on xVelocity sign
-    - [ ] `animate(dt)`: advance sprite animation
-    - [ ] `decreaseCoyoteTimer(dt)`: count down when airborne
-    - [ ] `syncPhysics()`: write velocity to physics body, read position back
-    - [ ] `movement(dt)`: apply acceleration or friction based on input
-    - [ ] `applyGravity(dt)`: add gravity when airborne
-  - [ ] `Draw(screen, camera)`: draw current frame, flip if facing left, apply tint
-  - [ ] `Jump()`: grounded/coyote → full jump; airborne + canDoubleJump → 0.75× jump
-  - [ ] `TakeDamage(amount)`: reduce health, tint red, kill if health ≤ 0
-  - [ ] `Kill()` / `Respawn()`: death flag, reset position + health
-  - [ ] `IncrementCoinCount()`
-- [ ] Wire collision callbacks
-  - [ ] `OnBeginContact` → detect ground (normal pointing up), set grounded + reset coyote
-  - [ ] `OnBeginContact` → detect ceiling (normal pointing down), zero Y velocity
-  - [ ] `OnEndContact` → unground if leaving the ground collision
+- [x] Create `internal/input/input.go`
+  - [x] `IsDown(keys ...ebiten.Key) bool`: any of the keys held
+  - [x] `JustPressed(key ebiten.Key) bool`: pressed this frame only
+- [x] Create `internal/entity/player.go`
+  - [x] Define `Player` struct
+    - [x] Physics body reference
+    - [x] Position, velocity, dimensions (20×60)
+    - [x] Health struct (current: 3, max: 3)
+    - [x] Coin count
+    - [x] Movement constants (maxSpeed: 200, accel: 1500, friction: 3500, gravity: 1500)
+    - [x] Jump constants (force: −650, doubleJumpMult: 0.75, coyoteTime: 0.25)
+    - [x] Animation state, direction, color tint
+  - [x] `Update(dt)` pipeline:
+    - [x] `untintRed(dt)`: restore color toward white
+    - [x] `respawn()`: reset if dead
+    - [x] `setAnimState()`: idle / run / air based on grounded + velocity
+    - [x] `setDirection()`: left / right based on xVelocity sign
+    - [x] `animate(dt)`: advance sprite animation
+    - [x] `decreaseCoyoteTimer(dt)`: count down when airborne
+    - [x] `syncPhysics()`: write velocity to physics body
+    - [x] `movement(dt)`: apply acceleration or friction based on input
+    - [x] `applyGravity(dt)`: add gravity when airborne
+  - [x] `Draw(screen, cameraX, cameraY)`: draw current frame, flip if facing left, apply tint
+  - [x] `Jump()`: grounded/coyote → full jump; airborne + canDoubleJump → 0.75× jump
+  - [x] `TakeDamage(amount)`: reduce health, tint red, kill if health ≤ 0
+  - [x] `Kill()` / `Respawn()`: death flag, reset position + health
+  - [x] `IncrementCoinCount()`
+- [x] Wire collision callbacks
+  - [x] `OnBeginContact` → detect ground (normal.Y < 0), set grounded + reset coyote
+  - [x] `OnBeginContact` → detect ceiling (normal.Y > 0), zero Y velocity
+  - [x] `OnEndContact` → unground if leaving the ground collision
 - [ ] Level transition logic: if `player.X > MapWidth - TileSize` → call `Map.Next()`
-- [ ] Verify: full movement, jumping, double jump, coyote time, level transition
+- [x] Verify: full movement, jumping, double jump, coyote time
 
 ### Phase 6: Entities & Interactions
 
