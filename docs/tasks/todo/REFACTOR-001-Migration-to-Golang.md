@@ -153,68 +153,63 @@
 
 ### Phase 6: Entities & Interactions
 
-- [ ] Create `internal/entity/coin.go`
-  - [ ] Define `Coin` struct (body, image, scaleX, randomTimeOffset, toRemove flag)
-  - [ ] `NewCoin(x, y, world)`: create static sensor body
-  - [ ] `Update(dt)`: spin animation: `scaleX = sin(time × 4 + offset)`
-  - [ ] `Draw(screen, camera)`: draw coin with scaleX applied
-  - [ ] On contact with player → set `toRemove = true`, increment player coins
-  - [ ] Deferred removal: remove from world + slice after physics step
-- [ ] Create `internal/entity/spike.go`
-  - [ ] Define `Spike` struct (body, image, damage: 1)
-  - [ ] `NewSpike(x, y, world)`: create static sensor body
-  - [ ] On contact with player → `player.TakeDamage(1)`
-  - [ ] `Draw(screen, camera)`: draw spike image
-- [ ] Create `internal/entity/stone.go`
-  - [ ] Define `Stone` struct (body, image, rotation)
-  - [ ] `NewStone(x, y, world)`: create dynamic body, mass 25
-  - [ ] `Update(dt)`: sync position + rotation from physics body
-  - [ ] `Draw(screen, camera)`: draw with rotation applied
-- [ ] Create `internal/entity/enemy.go`
-  - [ ] Define `Enemy` struct (body, animations, state, speed, rageCounter, damage)
-  - [ ] `NewEnemy(x, y, world)`: create dynamic body, fixed rotation, mass 25
-  - [ ] `Update(dt)`: sync physics, animate, apply patrol velocity
-  - [ ] `Draw(screen, camera)`: draw current frame, flip based on direction
-  - [ ] `FlipDirection()`: negate xVel on any collision
-  - [ ] `IncrementRage()`: count collisions, switch to run state (3× speed) after 3
-  - [ ] On contact with player → `player.TakeDamage(1)`
-- [ ] Create entity manager
-  - [ ] Separate slices: `coins`, `enemies`, `spikes`, `stones`
-  - [ ] `SpawnFromMap(spawns, world)`: instantiate by type string
-  - [ ] `UpdateAll(dt)`: iterate each slice, update each entity
-  - [ ] `DrawAll(screen, camera)`: iterate each slice, draw each entity
-  - [ ] `RemoveMarked()`: remove entities flagged for deletion
-  - [ ] `RemoveAll()`: destroy all bodies, clear slices (for level transitions)
-  - [ ] `GetCounts() (coins, enemies, spikes, stones int)`: for debug overlay
-- [ ] Wire entity spawning into tilemap entity layer
-- [ ] Verify: all entities spawn, coins collectible, spikes damage, stones pushable, enemies patrol
+- [x] Create `internal/entity/coin.go`
+  - [x] Define `Coin` struct (body, image, scaleX, randomTimeOffset, toRemove flag)
+  - [x] `NewCoin(x, y, world)`: create static sensor body
+  - [x] `Update(dt)`: spin animation: `scaleX = sin(time × 4 + offset)`
+  - [x] `Draw(screen, camX, camY)`: draw coin with scaleX applied
+  - [x] On contact with player → set `toRemove = true`, increment player coins
+  - [x] Deferred removal: remove from world + slice after physics step
+- [x] Create `internal/entity/spike.go`
+  - [x] Define `Spike` struct (body, image, damage: 1)
+  - [x] `NewSpike(x, y, world)`: create static sensor body
+  - [x] On contact with player → `player.TakeDamage(1)`
+  - [x] `Draw(screen, camX, camY)`: draw spike image
+- [x] Create `internal/entity/stone.go`
+  - [x] Define `Stone` struct (body, image)
+  - [x] `NewStone(x, y, world)`: create dynamic body
+  - [x] ~~`Update(dt)`: sync rotation~~ — rotation skipped (AABB limitation)
+  - [x] `Draw(screen, camX, camY)`: draw centered on body
+- [x] Create `internal/entity/enemy.go`
+  - [x] Define `Enemy` struct (body, animations, state, speed, rageCounter, damage)
+  - [x] `NewEnemy(x, y, world)`: create dynamic body, fixed Y push
+  - [x] `Update(dt)`: set patrol velocity, animate via Controller
+  - [x] `Draw(screen, camX, camY)`: draw current frame, flip based on direction
+  - [x] `flipDirection()`: negate xVel on any collision
+  - [x] `incrementRage()`: count collisions, switch to run state (3× speed) after 3
+  - [x] On contact with player → `player.TakeDamage(1)`
+- [x] Create entity manager
+  - [x] Separate slices: `coins`, `enemies`, `spikes`, `stones`
+  - [x] `SpawnFromMap(spawns, world, player)`: instantiate by type string
+  - [x] `UpdateAll(dt)`: iterate each slice, update each entity
+  - [x] `DrawAll(screen, camX, camY)`: iterate each slice, draw each entity
+  - [x] `RemoveMarked(world)`: remove entities flagged for deletion
+  - [x] `RemoveAll(world)`: destroy all bodies, clear slices (for level transitions)
+  - [ ] `GetCounts()`: for debug overlay — deferred to Phase 7
+- [x] Wire entity spawning into tilemap entity layer
+- [x] Verify: all entities spawn, coins collectible, spikes damage, stones pushable, enemies patrol
 
 ### Phase 7: GUI & Polish
 
-- [ ] Create `internal/gui/hud.go`
-  - [ ] Load heart image + coin image
-  - [ ] `Draw(screen, player)`: draw N hearts with spacing + shadow, coin icon + count
-  - [ ] Shadow effect: draw image at +2px offset in black at 50% alpha
-  - [ ] Use pixel font for coin count text
-- [ ] Create `internal/gui/menu.go`
-  - [ ] Define `Menu` struct (active, buttons with text + bounds + action)
-  - [ ] 3 buttons: Resume (toggle menu), Settings (no-op print), Quit (os.Exit)
-  - [ ] `Update()`: check mouse hover on buttons
-  - [ ] `Draw(screen)`: semi-transparent overlay, button rects, hover highlight, text
-  - [ ] `MousePressed(x, y)`: fire button action on click
-  - [ ] `Toggle()`: flip active state
-  - [ ] Block game updates when menu is active
-- [ ] Create `internal/gui/debug.go`
-  - [ ] Define `DebugGUI` struct (active, font, entity counts, metrics)
-  - [ ] `Update(dt)`: read FPS (`ebiten.ActualFPS()`), compute frame time, memory stats
-  - [ ] `UpdateEntityCounts(coins, enemies, spikes, stones)`
-  - [ ] `Draw(screen)`: black background panel, yellow text, red for draw calls > 1000
-  - [ ] `Toggle()`: F3 key binding
-- [ ] Clean-up legacy files
-  - [ ] Delete `main.lua`
-  - [ ] Delete `conf.lua`
-  - [ ] Delete `src/` directory (all Lua source)
-  - [ ] Delete `modules/` directory (LuaRocks/STI)
+- [x] Create `internal/gui/hud.go`
+  - [x] Load heart image + coin image
+  - [x] `Draw(screen, health, maxHealth, coinCount)`: draw N hearts with spacing + shadow, coin icon + count
+  - [x] Shadow effect: draw image at offset in black at 50% alpha
+  - [x] Use pixel font for coin count text
+- [x] Create `internal/gui/menu.go`
+  - [x] Define `Menu` struct (active, buttons with text + bounds + action)
+  - [x] 3 buttons: Resume (toggle menu), Settings (no-op print), Quit (ebiten.Termination)
+  - [x] `Update()`: check mouse hover on buttons
+  - [x] `Draw(screen)`: semi-transparent overlay, button rects, hover highlight, text
+  - [x] `MousePressed(x, y)`: fire button action on click
+  - [x] `Toggle()`: flip active state
+  - [x] Block game updates when menu is active
+- [x] Create `internal/gui/debug.go`
+  - [x] Define `Debug` struct (active, font, entity counts, metrics)
+  - [x] `Update(dt)`: read FPS (`ebiten.ActualFPS()`), compute frame time, memory stats
+  - [x] `UpdateEntityCounts(coins, enemies, spikes, stones)`
+  - [x] `Draw(screen)`: black background panel, yellow text
+  - [x] `Toggle()`: F3 key binding
 - [ ] Update documentation
   - [ ] Rewrite `README.md` with Go build/run instructions
   - [ ] Update `docs/project/02-Tech-Stack.md` with Go + Ebitengine
