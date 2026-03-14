@@ -16,14 +16,12 @@ const (
 	debugMargin     = 6.0
 	debugPanelX     = 4.0
 	debugPanelY     = 28.0 // below HUD hearts
-	debugPanelW     = 130.0
 	debugFontSize   = 8.0
 )
 
 var (
-	debugTextColor    = color.NRGBA{255, 255, 0, 191} // yellow 75% alpha
-	debugWarningColor = color.NRGBA{255, 51, 51, 255} // red
-	debugBGColor      = color.NRGBA{0, 0, 0, 153}     // black 60% alpha
+	debugTextColor = color.NRGBA{255, 255, 0, 191} // yellow 75% alpha
+	debugBGColor   = color.NRGBA{0, 0, 0, 153}     // black 60% alpha
 )
 
 // Debug is a toggleable performance overlay.
