@@ -1,0 +1,36 @@
+# golangci-lint configuration (v2)
+# Matches VS Code settings: gofumpt formatter, 120-char line limit
+
+version: "2"
+
+formatters:
+  enable:
+    - gofumpt
+  settings:
+    gofumpt:
+      extra-rules: true
+
+linters:
+  enable:
+    - errcheck       # check for unchecked errors
+    - govet          # go vet checks
+    - staticcheck    # advanced static analysis
+    - unused         # detect unused code
+    - ineffassign    # detect ineffectual assignments
+    - lll            # line length linter
+    - misspell       # catch common misspellings
+    - gosimple       # simplify code suggestions
+    - gocritic       # opinionated style checks
+    - prealloc       # suggest preallocating slices
+  settings:
+    lll:
+      line-length: 120  # matches editor.wordWrapColumn / editor.rulers
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - style
+        - performance
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
