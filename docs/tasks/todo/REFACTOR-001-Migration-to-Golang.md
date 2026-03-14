@@ -15,38 +15,38 @@
 
 ### Phase 1: Project Bootstrap
 
-- [ ] Run `go mod init github.com/leo9iota/darling-in-the-goland`
-- [ ] Run `go get github.com/hajimehoshi/ebiten/v2`
-- [ ] Create `cmd/game/main.go`
-  - [ ] Define `Game` struct
-  - [ ] Implement `Update() error` (empty, return nil)
-  - [ ] Implement `Draw(screen *ebiten.Image)` (fill with background color)
-  - [ ] Implement `Layout(outsideW, outsideH int) (int, int)` (return 640×360 for 2× scaling)
-  - [ ] Call `ebiten.RunGame(&Game{})` in `main()`
-- [ ] Configure window properties
-  - [ ] Set title: `ebiten.SetWindowTitle("Darling in the GoLand")`
-  - [ ] Set size: `ebiten.SetWindowSize(1280, 720)`
-  - [ ] Disable vsync: `ebiten.SetVsyncEnabled(false)`
-- [ ] Handle ESC key to close window
-- [ ] Verify: `go run ./cmd/game` opens window, displays solid color, exits on ESC
+- [x] Run `go mod init github.com/leo9iota/darling-in-the-goland`
+- [x] Run `go get github.com/hajimehoshi/ebiten/v2`
+- [x] Create `cmd/game/main.go`
+  - [x] Define `Game` struct
+  - [x] Implement `Update() error` (empty, return nil)
+  - [x] Implement `Draw(screen *ebiten.Image)` (fill with background color)
+  - [x] Implement `Layout(outsideW, outsideH int) (int, int)` (return 640×360 for 2× scaling)
+  - [x] Call `ebiten.RunGame(&Game{})` in `main()`
+- [x] Configure window properties
+  - [x] Set title: `ebiten.SetWindowTitle("Darling in the GoLand")`
+  - [x] Set size: `ebiten.SetWindowSize(1280, 720)`
+  - [x] Disable vsync: `ebiten.SetVsyncEnabled(false)`
+- [x] Handle ESC key to close window
+- [x] Verify: `go run ./cmd/game` opens window, displays solid color, exits on ESC
 
 ### Phase 2: Asset Pipeline & Rendering Primitives
 
-- [ ] Create asset loading utilities
-  - [ ] Image loader: load PNG from disk → `*ebiten.Image`
+- [x] Create asset loading utilities
+  - [x] Image loader: load PNG from disk → `*ebiten.Image`
   - [ ] Font loader: load TTF from disk → `text/v2` face
-- [ ] Create `internal/animation/sprite.go`
-  - [ ] Define `Animation` struct (frames, timer, rate, current frame index)
-  - [ ] `Update(dt)`: advance timer, cycle frame
-  - [ ] `CurrentFrame() *ebiten.Image`: return active frame
-  - [ ] `Reset()`: rewind to frame 0
-- [ ] Create `internal/core/background.go`
-  - [ ] Define `Layer` struct (image, parallax factor, x offset, y offset)
-  - [ ] `Load(paths, factors)`: load 4 layers, compute y from screen bottom
-  - [ ] `Update(cameraX)`: update each layer x = −cameraX × factor
-  - [ ] `Draw(screen)`: render layers back-to-front with tiling
+- [x] Create `internal/animation/sprite.go`
+  - [x] Define `Animation` struct (frames, timer, rate, current frame index)
+  - [x] `Update(dt)`: advance timer, cycle frame
+  - [x] `CurrentFrame() *ebiten.Image`: return active frame
+  - [x] `Reset()`: rewind to frame 0
+- [x] Create `internal/core/background.go`
+  - [x] Define `Layer` struct (image, parallax factor, x offset, y offset)
+  - [x] `Load(paths, factors)`: load 4 layers, compute y from screen bottom
+  - [x] `Update(cameraX)`: update each layer x = −cameraX × factor
+  - [x] `Draw(screen)`: render layers back-to-front with tiling
 - [ ] Load `public-pixel-font.ttf` as a reusable font face
-- [ ] Verify: background scrolls via arrow keys, an animated sprite plays on screen
+- [x] Verify: background scrolls via arrow keys, an animated sprite plays on screen
 
 ### Phase 3: Custom Physics Engine
 
