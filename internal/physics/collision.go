@@ -94,8 +94,24 @@ func resolveContact(c Contact) {
 		half := mtv.Scale(0.5)
 		c.BodyA.Position = c.BodyA.Position.Add(half)
 		c.BodyB.Position = c.BodyB.Position.Sub(half)
-		zeroVelocityAlongNormal(c.BodyA, c.Normal)
-		zeroVelocityAlongNormal(c.BodyB, c.Normal.Scale(-1))
+
+		// Transfer velocity: pusher gives momentum to the pushed body.
+		if math.Abs(c.Normal.X) > math.Abs(c.Normal.Y) {
+			// Horizontal push — transfer 60% of velocity
+			if c.Normal.X > 0 && c.BodyB.Velocity.X > 0 {
+				c.BodyA.Velocity.X = c.BodyB.Velocity.X * 0.6
+			} else if c.Normal.X < 0 && c.BodyA.Velocity.X > 0 {
+				c.BodyB.Velocity.X = c.BodyA.Velocity.X * 0.6
+			} else if c.Normal.X > 0 && c.BodyA.Velocity.X < 0 {
+				c.BodyB.Velocity.X = c.BodyA.Velocity.X * 0.6
+			} else if c.Normal.X < 0 && c.BodyB.Velocity.X < 0 {
+				c.BodyA.Velocity.X = c.BodyB.Velocity.X * 0.6
+			}
+		} else {
+			// Vertical collision — just stop overlap
+			zeroVelocityAlongNormal(c.BodyA, c.Normal)
+			zeroVelocityAlongNormal(c.BodyB, c.Normal.Scale(-1))
+		}
 	}
 }
 
