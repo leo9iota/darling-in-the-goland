@@ -1,6 +1,5 @@
 # Build output
-*.exe
-build/
+/game.exe
 
 # Go
 *.test

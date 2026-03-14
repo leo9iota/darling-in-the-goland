@@ -1,8 +1,8 @@
 # Darling in the GoLand
 
-Classic platformer game inspired by [Super Mario](https://supermario-game.com/) in a retro pixel art style — written in Go with [Ebitengine](https://ebitengine.org/).
+Classic platformer game inspired by [Super Mario](https://supermario-game.com/) in a retro pixel art style, rewritten in [Go](https://go.dev/) with [Ebitengine](https://ebitengine.org/).
 
-> The name is a triple pun on the anime _Darling in the FranXX_, the Go programming language, and the JetBrains GoLand IDE.
+> The project name is a pun on the anime Darling in the FranXX, the Go programming language, and the JetBrains GoLand IDE.
 
 ## Prerequisites
 
@@ -24,12 +24,12 @@ task build:windows
 
 ## Controls
 
-| Key | Action |
-| --- | ------ |
-| A / D or ← / → | Move left / right |
-| W or ↑ | Jump (press again mid-air for double jump) |
-| Escape | Toggle pause menu |
-| F3 | Toggle debug overlay |
+| Key            | Action                                     |
+| -------------- | ------------------------------------------ |
+| A / D or ← / → | Move left / right                          |
+| W or ↑         | Jump (press again mid-air for double jump) |
+| Escape         | Toggle pause menu                          |
+| F3             | Toggle debug overlay                       |
 
 ## Build Targets
 
@@ -64,11 +64,11 @@ docs/
 
 ## Tech Stack
 
-| Component | Technology |
-| --------- | ---------- |
-| Language | Go 1.26 |
-| Engine | Ebitengine v2 |
-| Physics | Custom AABB (no Box2D) |
-| Maps | Tiled `.tmx` (XML) |
-| Font | `text/v2` with pixel font |
-| CI/CD | GitHub Actions |
+| Component | Technology                |
+| --------- | ------------------------- |
+| Language  | Go 1.26                   |
+| Engine    | Ebitengine v2             |
+| Physics   | Custom AABB (no Box2D)    |
+| Maps      | Tiled `.tmx` (XML)        |
+| Font      | `text/v2` with pixel font |
+| CI/CD     | GitHub Actions            |
