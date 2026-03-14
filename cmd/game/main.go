@@ -46,7 +46,7 @@ func NewGame() (*Game, error) {
 	}
 
 	// Load player idle animation for demo
-	idleFrames, err := loadFrames("assets/player/idle", 4)
+	idleFrames, err := loadFrames("assets/player/idle/zero-two-idle-%d.png", 4)
 	if err != nil {
 		return nil, fmt.Errorf("loading player idle frames: %w", err)
 	}
@@ -99,11 +99,11 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 	return screenWidth, screenHeight
 }
 
-// loadFrames loads numbered PNG frames (1.png, 2.png, ...) from a directory.
-func loadFrames(dir string, count int) ([]*ebiten.Image, error) {
+// loadFrames loads numbered PNG frames using a format pattern (e.g. "dir/sprite-%d.png").
+func loadFrames(pattern string, count int) ([]*ebiten.Image, error) {
 	frames := make([]*ebiten.Image, 0, count)
 	for i := 1; i <= count; i++ {
-		path := fmt.Sprintf("%s/%d.png", dir, i)
+		path := fmt.Sprintf(pattern, i)
 		f, err := os.Open(path)
 		if err != nil {
 			return nil, fmt.Errorf("opening %s: %w", path, err)
