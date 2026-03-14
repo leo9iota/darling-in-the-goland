@@ -33,12 +33,14 @@ const (
 )
 
 // Player is the main character entity.
+// velocityDeadZone prevents idle↔run thrashing during friction deceleration.
+const velocityDeadZone = 10.0
+
 type Player struct {
 	Body *physics.Body
 
-	animations map[string]*animation.Animation
-	animState  string
-	direction  float64 // 1.0 = right, -1.0 = left
+	anim      *animation.Controller
+	direction float64 // 1.0 = right, -1.0 = left
 
 	isGrounded     bool
 	canDoubleJump  bool
@@ -77,27 +79,31 @@ func NewPlayer(x, y float64, world *physics.World) (*Player, error) {
 		return nil, fmt.Errorf("loading air frames: %w", err)
 	}
 
+	anim := animation.NewController()
+	anim.AddClip("idle", animation.NewClip(idleFrames, 0.15))
+	anim.AddClip("run", animation.NewClip(runFrames, 0.08))
+	anim.AddClip("air", animation.NewClip(airFrames, 0.12))
+
 	p := &Player{
-		Body: body,
-		animations: map[string]*animation.Animation{
-			"idle": animation.NewAnimation(idleFrames, 0.1),
-			"run":  animation.NewAnimation(runFrames, 0.1),
-			"air":  animation.NewAnimation(airFrames, 0.1),
-		},
-		animState:   "idle",
-		direction:   1.0,
-		isGrounded:  false,
+		Body:          body,
+		anim:          anim,
+		direction:     1.0,
+		isGrounded:    false,
 		canDoubleJump: true,
-		health:      3,
-		maxHealth:   3,
-		isAlive:     true,
-		startX:      x,
-		startY:      y,
-		tintR:       1, tintG: 1, tintB: 1,
+		health:        3,
+		maxHealth:     3,
+		isAlive:       true,
+		startX:        x,
+		startY:        y,
+		tintR:         1, tintG: 1, tintB: 1,
 	}
 
 	// Register collision callbacks
 	body.OnBeginContact = func(other *physics.Body, normal gm.Vec2) {
+		// Don't ground on sensors (coins, spikes)
+		if other.IsSensor {
+			return
+		}
 		if normal.Y < 0 {
 			// Landed on ground (pushed up)
 			p.land(other)
@@ -126,14 +132,13 @@ func (p *Player) Update(dt float64) {
 	p.movement(dt)
 	p.applyGravity(dt)
 	p.decreaseCoyoteTimer(dt)
-	p.animations[p.animState].Update(dt)
+	p.anim.Update(dt)
 	p.syncPhysics()
 }
 
 // Draw renders the player sprite at its position, offset by the camera.
 func (p *Player) Draw(screen *ebiten.Image, cameraX, cameraY float64) {
-	anim := p.animations[p.animState]
-	frame := anim.CurrentFrame()
+	frame := p.anim.CurrentFrame()
 	fw := float64(frame.Bounds().Dx())
 	fh := float64(frame.Bounds().Dy())
 
@@ -240,11 +245,11 @@ func (p *Player) respawn() {
 
 func (p *Player) setAnimState() {
 	if !p.isGrounded {
-		p.animState = "air"
-	} else if p.Body.Velocity.X == 0 {
-		p.animState = "idle"
+		p.anim.SetState("air")
+	} else if math.Abs(p.Body.Velocity.X) < velocityDeadZone {
+		p.anim.SetState("idle")
 	} else {
-		p.animState = "run"
+		p.anim.SetState("run")
 	}
 }
 
