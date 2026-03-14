@@ -9,6 +9,7 @@ import (
 
 	"github.com/leo9iota/darling-in-the-goland/internal/core"
 	"github.com/leo9iota/darling-in-the-goland/internal/entity"
+	"github.com/leo9iota/darling-in-the-goland/internal/gui"
 	"github.com/leo9iota/darling-in-the-goland/internal/physics"
 	"github.com/leo9iota/darling-in-the-goland/internal/tilemap"
 )
@@ -28,6 +29,9 @@ type Game struct {
 	world      *physics.World
 	player     *entity.Player
 	entities   *entity.Manager
+	hud        *gui.HUD
+	menu       *gui.Menu
+	debug      *gui.Debug
 }
 
 func NewGame() (*Game, error) {
@@ -52,8 +56,9 @@ func NewGame() (*Game, error) {
 		return nil, fmt.Errorf("loading tilemap: %w", err)
 	}
 
-	// Create physics world (gravity handled by player/entities, world gravity = 0)
-	world := physics.NewWorld(0, 0)
+	// World gravity matches playerGravity (1500). Player/enemy have GravityScale=0
+	// and handle gravity manually. Stones use GravityScale=1 to fall naturally.
+	world := physics.NewWorld(0, 1500)
 
 	// Generate static colliders from the solid layer
 	colliders := tm.GenerateColliders(world)
@@ -73,19 +78,62 @@ func NewGame() (*Game, error) {
 	cam := core.NewCamera(screenWidth, screenHeight)
 	cam.SetBounds(tm.MapWidthPx())
 
-	return &Game{
+	// Create GUI layers
+	hud, err := gui.NewHUD(screenWidth, screenHeight)
+	if err != nil {
+		return nil, fmt.Errorf("creating HUD: %w", err)
+	}
+
+	g := &Game{
 		background: bg,
 		tileMap:    tm,
 		camera:     cam,
 		world:      world,
 		player:     player,
 		entities:   mgr,
-	}, nil
+		hud:        hud,
+	}
+
+	// Create menu (needs reference to toggle function)
+	menu, err := gui.NewMenu(screenWidth, screenHeight, func() {
+		g.menu.Toggle()
+	})
+	if err != nil {
+		return nil, fmt.Errorf("creating menu: %w", err)
+	}
+	g.menu = menu
+
+	// Create debug overlay
+	debug, err := gui.NewDebug()
+	if err != nil {
+		return nil, fmt.Errorf("creating debug: %w", err)
+	}
+	g.debug = debug
+
+	return g, nil
 }
 
 func (g *Game) Update() error {
+	// F3 toggles debug overlay
+	if inpututil.IsKeyJustPressed(ebiten.KeyF3) {
+		g.debug.Toggle()
+	}
+
+	// Escape toggles pause menu
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
-		return ebiten.Termination
+		g.menu.Toggle()
+	}
+
+	// Handle mouse clicks for menu
+	if g.menu.Active {
+		g.menu.Update()
+		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+			mx, my := ebiten.CursorPosition()
+			if err := g.menu.MousePressed(mx, my); err != nil {
+				return err
+			}
+		}
+		return nil // Block game updates while menu is open
 	}
 
 	dt := 1.0 / float64(ebiten.TPS())
@@ -95,16 +143,16 @@ func (g *Game) Update() error {
 		g.player.Jump()
 	}
 
-	// Update player (movement, gravity, animation)
+	// Update player
 	g.player.Update(dt)
 
-	// Update entities (coin spin, enemy patrol)
+	// Update entities
 	g.entities.UpdateAll(dt)
 
-	// Step physics (collision detection/resolution, callbacks)
+	// Step physics
 	g.world.Update(dt)
 
-	// Remove collected coins after physics step
+	// Remove collected coins
 	g.entities.RemoveMarked(g.world)
 
 	// Camera follows player
@@ -113,6 +161,11 @@ func (g *Game) Update() error {
 
 	// Update background parallax
 	g.background.Update(g.camera.X)
+
+	// Update debug overlay
+	g.debug.Update(dt)
+	coins, enemies, spikes, stones := g.entities.GetCounts()
+	g.debug.UpdateEntityCounts(coins, enemies, spikes, stones)
 
 	return nil
 }
@@ -124,11 +177,20 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	// 2. Tile layers
 	g.tileMap.Draw(screen, g.camera.X, g.camera.Y)
 
-	// 3. Entities (coins, spikes, stones, enemies)
+	// 3. Entities
 	g.entities.DrawAll(screen, g.camera.X, g.camera.Y)
 
-	// 4. Player (on top of entities)
+	// 4. Player
 	g.player.Draw(screen, g.camera.X, g.camera.Y)
+
+	// 5. HUD (always visible, on top of game)
+	g.hud.Draw(screen, g.player.Health(), 3, g.player.CoinCount())
+
+	// 6. Debug overlay (if active)
+	g.debug.Draw(screen)
+
+	// 7. Pause menu (on top of everything)
+	g.menu.Draw(screen)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
@@ -138,6 +200,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 func main() {
 	ebiten.SetWindowTitle("Darling in the GoLand")
 	ebiten.SetWindowSize(windowWidth, windowHeight)
+	ebiten.SetScreenFilterEnabled(false) // nearest-neighbor for crisp pixel art
 	ebiten.SetVsyncEnabled(false)
 
 	game, err := NewGame()
