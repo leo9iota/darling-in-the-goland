@@ -4,7 +4,7 @@ Classic platformer game inspired by [Super Mario](https://supermario-game.com/) 
 
 > The project name is a pun on the anime Darling in the FranXX, the Go programming language, and the JetBrains GoLand IDE.
 
-[Game Progress](./assets/images/progress/progress-2026-05-06.png)
+![Game Progress](./assets/images/progress/progress-2026-05-06.png)
 
 ## Prerequisites
 
