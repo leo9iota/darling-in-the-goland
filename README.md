@@ -41,36 +41,6 @@ task build:macos-arm   # macOS (arm64)
 task build:all         # All platforms
 ```
 
-## Project Structure
+## License
 
-```
-.
-├── assets/             # Sprites, backgrounds, fonts, maps
-├── cmd/
-│   └── game/           # Entry point (main.go)
-├── docs/
-│   ├── code/           # Original Lua source (reference)
-│   ├── project/        # Design docs, tech stack
-│   ├── specs/          # Workflow specs
-│   └── tasks/          # Task tracking (CHORE, FEAT, REFACTOR)
-└── internal/
-    ├── animation/      # Clip + Controller state machine
-    ├── core/           # Camera, parallax background
-    ├── entity/         # Player, enemies, coins, spikes, stones, manager
-    ├── gui/            # HUD, pause menu, debug overlay, font scale
-    ├── input/          # Keyboard abstraction
-    ├── math/           # Vec2 game math
-    ├── physics/        # AABB collision, bodies, world simulation
-    └── tilemap/        # Tiled .tmx parser, tileset, rendering
-```
-
-## Tech Stack
-
-| Component | Technology                |
-| --------- | ------------------------- |
-| Language  | Go 1.26                   |
-| Engine    | Ebitengine v2             |
-| Physics   | Custom AABB (no Box2D)    |
-| Maps      | Tiled `.tmx` (XML)        |
-| Font      | `text/v2` with pixel font |
-| CI/CD     | GitHub Actions            |
+[MIT](./LICENSE)
