@@ -4,10 +4,12 @@ Classic platformer game inspired by [Super Mario](https://supermario-game.com/) 
 
 > The project name is a pun on the anime Darling in the FranXX, the Go programming language, and the JetBrains GoLand IDE.
 
+[Game Progress](./assets/images/progress/progress-2026-05-06.png)
+
 ## Prerequisites
 
 - [Go](https://go.dev/) 1.26+
-- [Task](https://taskfile.dev/) (optional, for build commands)
+- [Just](https://just.systems/) (optional, for build commands)
 
 ## Quick Start
 
@@ -15,11 +17,11 @@ Classic platformer game inspired by [Super Mario](https://supermario-game.com/) 
 # Run directly
 go run ./cmd/game
 
-# Or via Task
-task run
+# Or via Just
+just run
 
 # Build executable
-task build:windows
+just build-windows
 ```
 
 ## Controls
@@ -34,11 +36,11 @@ task build:windows
 ## Build Targets
 
 ```bash
-task build:windows     # Windows (amd64)
-task build:linux       # Linux (amd64)
-task build:macos       # macOS (amd64)
-task build:macos-arm   # macOS (arm64)
-task build:all         # All platforms
+just build-windows     # Windows (amd64)
+just build-linux       # Linux (amd64)
+just build-macos       # macOS (amd64)
+just build-macos-arm   # macOS (arm64)
+just build-all         # All platforms
 ```
 
 ## License
