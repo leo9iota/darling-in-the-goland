@@ -2,8 +2,6 @@
 
 Classic platformer game inspired by [Super Mario](https://supermario-game.com/) in a retro pixel art style, rewritten in [Go](https://go.dev/) with [Ebitengine](https://ebitengine.org/).
 
-> The project name is a pun on the anime Darling in the FranXX, the Go programming language, and the JetBrains GoLand IDE.
-
 ![Game Progress](./assets/images/progress/progress-2026-05-06.png)
 
 ## Prerequisites
